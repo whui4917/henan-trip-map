@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>河南五城深度参考行程地图 · 郑州/宝泉/登封/洛阳/开封</title>
+<meta name="description" content="11.3–11.7（可选延至11.8）河南五城自驾+高铁串联参考行程地图：二七塔、河南博物院、1952油化厂、宝泉崖天下+大峡谷、嵩山少林寺、白马寺、龙门石窟亮灯、应天门、万岁山打铁花">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+/* ═══════════════════════════════════════════
+   Design System — Apple HIG Frosted Glass
+   ═══════════════════════════════════════════ */
+:root {
+  --bg-primary:    #ffffff;
+  --bg-secondary:  #f5f5f7;
+  --bg-tertiary:   #fbfbfd;
+  --bg-grouped:    #f2f2f7;
+  --bg-elevated:   #ffffff;
+  --text-primary:   #1d1d1f;
+  --text-secondary: #86868b;
+  --text-tertiary:  #aeaeb2;
+  --accent:        #0071e3;
+  --accent-hover:  #0077ed;
+  --tint-red:    #ff3b30;
+  --tint-orange: #ff9500;
+  --tint-green:  #34c759;
+  --tint-blue:   #007aff;
+  --tint-purple: #af52de;
+  --tint-pink:   #ff2d55;
+  --separator:  rgba(60, 60, 67, .12);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:  0 4px 14px rgba(0,0,0,.08);
+  --shadow-lg:  0 8px 30px rgba(0,0,0,.12);
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+               "PingFang SC", "Helvetica Neue", "Arial", sans-serif;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.47059;
+  letter-spacing: -0.022em;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Map ── */
+#map { width: 100%; height: 40vh; min-height: 280px; position: sticky; top: 0; z-index: 100; }
+.locate-btn {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(255,255,255,.92); backdrop-filter: blur(8px);
+  border: none; box-shadow: 0 1px 4px rgba(0,0,0,.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.locate-btn.active { color: #007aff; }
+@keyframes loc-pulse {
+  0%   { transform: scale(1); opacity: .55; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.loc-pulse {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: rgba(0,122,255,.25);
+  animation: loc-pulse 1.6s ease-out infinite;
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex; gap: 6px; padding: 12px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  background: rgba(255,255,255,.85); -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px); position: sticky; top: 40vh; z-index: 99;
+  border-bottom: .5px solid var(--separator); scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0; padding: 7px 16px; border-radius: 980px; border: none;
+  background: var(--bg-grouped); color: var(--text-secondary);
+  font-size: 14px; font-weight: 500; cursor: pointer; transition: all .25s ease;
+  white-space: nowrap; letter-spacing: -0.01em;
+}
+.tab:active { transform: scale(.96); }
+.tab.active { background: var(--accent); color: #fff; }
+
+/* ── Main content ── */
+.content { max-width: 680px; margin: 0 auto; padding: 16px 16px calc(24px + var(--safe-bottom)); }
+
+/* ── Overview ── */
+.hero { text-align: center; padding: 24px 16px 18px; }
+.hero h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
+.hero .subtitle { font-size: 15px; color: var(--text-secondary); margin-top: 6px; font-weight: 400; }
+
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+.info-card { background: var(--bg-elevated); border-radius: var(--radius-lg); padding: 14px 16px; box-shadow: var(--shadow-sm); }
+.info-card .label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .02em; margin-bottom: 5px; }
+.info-card .value { font-size: 14px; font-weight: 600; line-height: 1.45; }
+
+/* ── Section headers ── */
+.section-head { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .03em; padding: 18px 0 8px; }
+
+/* ── Day header ── */
+.day-head { padding: 16px 0 12px; }
+.day-head h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.day-head p { font-size: 14px; color: var(--text-secondary); margin-top: 3px; }
+
+/* ── Route bar ── */
+.route-bar { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 14px; box-shadow: var(--shadow-sm); font-size: 13px; color: var(--text-secondary); line-height: 1.7; white-space: pre-line; }
+.route-bar strong { color: var(--text-primary); }
+
+/* ── Timeline ── */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before { content: ''; position: absolute; left: 7px; top: 20px; bottom: 20px; width: 1.5px; background: var(--separator); }
+.tl-item { position: relative; margin-bottom: 10px; }
+.tl-dot { position: absolute; left: -20px; top: 18px; width: 10px; height: 10px; border-radius: 50%; z-index: 1; box-shadow: 0 0 0 3px var(--bg-secondary); }
+.tl-dot.food    { background: var(--tint-red); }
+.tl-dot.spot    { background: var(--tint-blue); }
+.tl-dot.hotel   { background: var(--tint-orange); }
+.tl-dot.drink   { background: var(--tint-purple); }
+.tl-dot.transport { background: var(--text-tertiary); }
+
+/* ── Card ── */
+.card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm); transition: box-shadow .25s ease; cursor: pointer; }
+.card:active { box-shadow: var(--shadow-md); }
+.card .time { font-size: 12px; font-weight: 600; color: var(--text-tertiary); letter-spacing: .01em; }
+.card .name { font-size: 17px; font-weight: 600; margin: 2px 0 4px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.card .desc { font-size: 14px; color: var(--text-secondary); line-height: 1.48; }
+
+/* Badge */
+.badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 4px; }
+.badge.food   { background: rgba(255,59,48,.1);  color: var(--tint-red); }
+.badge.spot   { background: rgba(0,122,255,.1);  color: var(--tint-blue); }
+.badge.drink  { background: rgba(175,82,222,.1); color: var(--tint-purple); }
+.badge.hotel  { background: rgba(255,149,0,.12); color: var(--tint-orange); }
+.badge.transport { background: rgba(142,142,147,.15); color: var(--text-secondary); }
+
+/* Budget */
+.budget { display: inline-block; margin-top: 6px; padding: 3px 10px; background: var(--bg-grouped); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+
+/* Payment */
+.pays { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.pay { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; }
+.pay.ok  { background: rgba(52,199,89,.1);  color: var(--tint-green); }
+.pay.no  { background: rgba(255,59,48,.08); color: var(--tint-red); }
+.pay.idk { background: rgba(255,149,0,.1);  color: var(--tint-orange); }
+
+/* Links row */
+.links { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; border: none; cursor: pointer;
+  text-decoration: none !important; transition: filter .2s;
+}
+.btn:active { filter: brightness(.9); }
+.btn.nav    { background: var(--accent); color: #fff; }
+.btn.xhs    { background: #ff2442; color: #fff; }
+.btn.dp     { background: #ffa700; color: #fff; }
+.btn.rsv    { background: var(--tint-green); color: #fff; }
+
+/* Action Sheet */
+.as-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,.35); backdrop-filter: blur(2px);
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.as-overlay.show { opacity: 1; pointer-events: auto; }
+.as-sheet {
+  width: 100%; max-width: 420px;
+  padding: 0 8px 34px;
+  transform: translateY(100%); transition: transform .3s cubic-bezier(.22,1,.36,1);
+}
+.as-overlay.show .as-sheet { transform: translateY(0); }
+.as-group {
+  background: rgba(255,255,255,.88); backdrop-filter: blur(20px);
+  border-radius: 14px; overflow: hidden; margin-bottom: 8px;
+}
+.as-group .as-item {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 16px; font-size: 18px; color: #007aff; font-weight: 500;
+  border: none; background: none; width: 100%; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.as-group .as-item + .as-item { border-top: .5px solid rgba(0,0,0,.12); }
+.as-group .as-item:active { background: rgba(0,0,0,.06); }
+.as-cancel { font-weight: 600; }
+
+/* Details — default open */
+.details {
+  margin-top: 10px; padding-top: 10px;
+  border-top: .5px solid var(--separator);
+  font-size: 13px; color: var(--text-secondary); line-height: 1.65;
+}
+.details.closed { display: none; }
+
+/* ── Overview day list ── */
+.day-list .card { margin-bottom: 8px; }
+.day-list .card .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+
+/* ── Payment & Tips summary ── */
+.pay-summary { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm); font-size: 13px; line-height: 1.7; margin-bottom: 10px; }
+.pay-summary h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.pay-summary .warn { color: var(--tint-red); font-weight: 600; }
+.pay-summary .ok-text { color: var(--tint-green); font-weight: 600; }
+.pay-summary .accent-text { color: var(--accent); font-weight: 600; }
+
+/* ── Legend ── */
+.legend { display: flex; gap: 14px; flex-wrap: wrap; padding: 8px 0; font-size: 12px; color: var(--text-secondary); }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── Leaflet overrides ── */
+.leaflet-popup-content-wrapper { border-radius: var(--radius-md) !important; box-shadow: var(--shadow-lg) !important; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important; }
+.leaflet-popup-content { font-size: 14px !important; line-height: 1.5 !important; margin: 12px 14px !important; }
+.leaflet-popup-content a { color: var(--accent) !important; }
+.leaflet-popup-tip { background: #fff !important; }
+.leaflet-control-zoom a { width: 34px !important; height: 34px !important; line-height: 34px !important; font-size: 16px !important; border-radius: 10px !important; background: rgba(255,255,255,.85) !important; -webkit-backdrop-filter: blur(10px) !important; backdrop-filter: blur(10px) !important; border: .5px solid var(--separator) !important; color: var(--text-primary) !important; }
+.leaflet-control-zoom { border-radius: 12px !important; overflow: hidden; box-shadow: var(--shadow-md) !important; border: none !important; }
+.leaflet-control-attribution { font-size: 9px !important; opacity: .5; }
+.popup-nav-btn { background: none; border: none; color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; padding: 0; }
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+<div class="tabs" id="tabs"></div>
+<div class="content" id="content"></div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  Hotel & Multi-City Reference Hubs + Days Data              ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const HOTEL = { name: '河南五城落脚中心（郑州→登封→洛阳→开封）', lat: 34.7523, lng: 113.6601 };
+
+const DAYS = [
+  { id: 0, label: '总览', color: '#0071e3', locations: [] },
+  {
+    id: 1,
+    label: 'D1 郑州',
+    date: '11月3日 周二 · 郑州人文与工业文创 + 晚间提车（帕萨特）',
+    title: 'D1 · 二七塔 · 河南博物院 · 1952油化厂',
+    color: '#ff9500',
+    routeSummary: '🚗 动线：08:00 郑州站出站 → 步行10min 二七纪念塔外观 → 方中山胡辣汤早餐 → 09:15 河南博物院（9km/25min） → 葛记焖饼午餐 → 14:30 郑州记忆1952油化厂（6km/20min） → 傍晚提车帕萨特 & 住郑州市内',
+    locations: [
+      {
+        name: '郑州站（08:00 出站）',
+        lat: 34.7466, lng: 113.6508,
+        type: 'transport',
+        time: '08:00',
+        desc: '抵达郑州火车站，建议从东广场出站，直接步行10分钟直达二七广场。',
+        detail: '💡 贴士：出站后轻装步行即可到二七纪念塔；若行李较多可先寄存或打车前往酒店放行李。',
+        gmap: '郑州站+Zhengzhou+Railway+Station'
+      },
+      {
+        name: '二七广场 | 二七纪念塔',
+        lat: 34.7523, lng: 113.6601,
+        type: 'spot',
+        time: '08:15',
+        desc: '郑州地标双身并联塔。09:00才开馆，08:15正好在广场拍清晨无人的双塔外观，不必苦等进塔。',
+        budget: '免费（外观免预约）',
+        detail: '📌 减法建议：二七纪念塔周一闭馆、周二09:00–17:00开放。你08:00出站步行过来才08:15，把宝贵的09:00第一波入场留给河南博物院更值！',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '郑州二七纪念塔 拍照机位',
+        reserve: 'https://zz27.com.cn/',
+        gmap: '郑州二七纪念塔'
+      },
+      {
+        name: '方中山胡辣汤（顺河路总店）',
+        lat: 34.7588, lng: 113.6815,
+        type: 'food',
+        time: '08:35',
+        desc: '河南早餐之魂！必点“两掺”（胡辣汤+豆腐脑）配牛肉水煎包、油饼。',
+        budget: '¥15–25/人',
+        detail: '🍜 大众点评信号：郑州胡辣汤头部老牌，汤底骨香浓郁、肉片实在。\n📕 小红书提醒：胡椒辣味非常猛！外地游客强烈建议点“两掺”（掺豆腐脑中和辣度），否则一早容易辣到冒汗。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '郑州方中山胡辣汤 点单攻略',
+        dianpingKeyword: '方中山胡辣汤 郑州',
+        reserve: 'http://www.fangzhongshan.cn/',
+        gmap: '郑州方中山胡辣汤顺河路总店'
+      },
+      {
+        name: '河南博物院 ⭐重预约',
+        lat: 34.7876, lng: 113.6669,
+        type: 'spot',
+        time: '09:15',
+        desc: '中原第一大馆（周二至周日09:00–20:30开放）。直奔贾湖骨笛、妇好鸮尊、云纹铜禁、莲鹤方壶。',
+        budget: '免费（需提前5天17:00抢票）',
+        detail: '⏰ 抢票死命令：11月3日（周二）参观，必须在【10月29日 17:00】准时在“河南博物院”微信公众号实名预约！\n🏛️ 观展动线：09:15第一波进馆直接上4楼或从1楼按朝代看起；镇馆九大国宝集中在1–3楼展厅，文创区“考古盲盒”在1楼大厅。若没抢到免费票，可买馆内“华夏古乐团”演出票入馆（非常震撼）。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '河南博物院 镇馆之宝 路线',
+        reserve: 'https://www.chnmus.net/',
+        gmap: '河南博物院'
+      },
+      {
+        name: '葛记焖饼（农业路/经三路店）',
+        lat: 34.7852, lng: 113.6745,
+        type: 'food',
+        time: '12:40',
+        desc: '非遗百年老字号，坛子肉焖饼吸满浓郁肉汁，配一碗红豆粥解腻，逛完博物院完美续命。',
+        budget: '¥35–50/人',
+        detail: '🍜 大众点评信号：离河南博物院很近，坛子肉肥而不腻，饼丝软韧入味。\n📕 小红书提醒：焖饼偏咸香口，一定要搭免费的红豆粥或点份拍黄瓜、葛记酱肉。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '郑州葛记焖饼',
+        dianpingKeyword: '葛记焖饼 郑州',
+        reserve: 'https://you.ctrip.com/food/157/4926576.html',
+        gmap: '郑州葛记焖饼'
+      },
+      {
+        name: '郑州记忆·1952油化厂创意园',
+        lat: 34.7738, lng: 113.6358,
+        type: 'spot',
+        time: '14:30',
+        desc: '距博物院约6km/23min。苏式红砖老肥皂厂改造，文艺涂鸦、复古车间与傍晚亮灯市集氛围感拉满。',
+        budget: '免费开放',
+        detail: '📸 游玩重点：园区比瑞光创意工厂更大、业态更丰富。16:30后夕阳斜照红砖墙+傍晚霓虹灯牌亮起最出片，还可以在园区喝杯咖啡。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '郑州记忆1952油化厂 拍照',
+        reserve: 'https://tw.trip.com/travel-guide/attraction/zhengzhou/zhengzhou-memory-1952-creative-park-154219034/',
+        gmap: '郑州记忆油化厂创意园'
+      },
+      {
+        name: '提车点（大众帕萨特）& 郑州市内酒店',
+        lat: 34.7610, lng: 113.6580,
+        type: 'hotel',
+        time: '18:30',
+        desc: '晚间提租车（帕萨特），检查轮胎/灯光/ETC及洛阳异地还车门店位置，住金水区或二七区酒店。',
+        budget: '租车约 ¥220–300/天',
+        detail: '🚗 自驾提醒：提车时拍一圈外观视频留底；酒店建议选带免费停车场的门店，方便次日一早7:30直接上连霍高速/郑云高速奔赴宝泉。',
+        pay: { wechat: 1, alipay: 1, card: 1 },
+        gmap: '郑州市金水区'
+      },
+      {
+        name: '健康路夜市 / 阿五黄河大鲤鱼（晚餐）',
+        lat: 34.7645, lng: 113.6542,
+        type: 'food',
+        time: '19:30',
+        desc: '离油化厂与金水区中心很近：想逛吃选健康路夜市，想坐下吃地道豫菜选阿五黄河大鲤鱼。',
+        budget: '¥30–90/人',
+        detail: '🍜 大众点评信号：健康路是郑州最火的本地夜市（19:00后出摊）；阿五红烧黄河鲤鱼鱼肉紧实无腥味，适合拿汤汁拌米饭。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '郑州健康路夜市 必吃',
+        dianpingKeyword: '健康路夜市 郑州',
+        gmap: '郑州健康路夜市'
+      },
+      {
+        name: '瑞光创意工厂（同质化备选/可略过）',
+        lat: 34.7695, lng: 113.6422,
+        type: 'spot',
+        time: '—',
+        desc: '老印刷厂改造文创园，距油化厂仅1.5km。与油化厂风格重叠度高，体力充沛可顺路快拍30分钟。',
+        budget: '免费',
+        detail: '✂️ 减法理由：瑞光体量较小，以“郑州”大字涂鸦墙拍照为主。如果更喜欢逛市集和拍复古工业风，把时间全留给1952油化厂更轻松。',
+        xhsKeyword: '郑州瑞光创意工厂',
+        reserve: 'https://gs.ctrip.com/html5/you/sight/zhengzhou157/5099476.html',
+        gmap: '郑州瑞光创意工厂'
+      },
+      {
+        name: '合记烩面（人民路总店 · 午餐备选）',
+        lat: 34.7562, lng: 113.6658,
+        type: 'food',
+        time: '—',
+        desc: '中华老字号河南羊肉烩面代表，汤浓肉烂，配糖蒜与辣椒油极香。',
+        budget: '¥25–40/人',
+        detail: '🍜 大众点评信号：一楼快餐大碗烩面性价比最高，优质羊肉烩面¥22左右吃到饱。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '郑州合记烩面 人民路',
+        dianpingKeyword: '合记烩面 人民路店',
+        reserve: 'https://hk.trip.com/moments/theme/poi-heji-10561123-guides-993135/',
+        gmap: '郑州合记烩面人民路店'
+      }
+    ]
+  },
+  {
+    id: 2,
+    label: 'D2 宝泉·登封',
+    date: '11月4日 周三 · 自驾宝泉（崖天下+大峡谷A线闭环）→ 晚宿登封',
+    title: 'D2 · 宝泉崖天下+大峡谷 · 夜宿登封',
+    color: '#34c759',
+    routeSummary: '🚗 动线：07:30 郑州出发（100km/1.5h） → 09:00 宝泉游客中心 → 洛伽寺索道上崖天下 → 祥云观景台 → L型洞穴电梯下大峡谷 → 翡翠海/见龙瀑 → 16:00 驱车赴登封（165km/2.5h） → 住登封',
+    locations: [
+      {
+        name: '河南宝泉旅游区 · 崖天下（洛伽寺索道上站）',
+        lat: 35.4852, lng: 113.4385,
+        type: 'spot',
+        time: '09:00',
+        desc: '郑州自驾100km约1.5h抵达。买“崖天下+大峡谷”双园联票，走A线先乘洛伽寺索道上山，全程下坡不费腿！',
+        budget: '双园联票约 ¥190–230（含景交/索道/电梯）',
+        detail: '🗺️ 黄金闭环路线（A线省力版）：\n1. 游客中心乘免费景交大巴（10min）→ 乘可容纳200人的【洛伽寺索道】（8min上崖天下）。\n2. 走【丹崖天路】绝壁栈道 → 打卡300米高空【祥云观景台】（俯瞰宝泉湖太行大峡谷S弯国家地理机位）。\n3. 步行/乘观光车至【368米L型洞穴电梯】直接下山进入大峡谷！\n⚠️ 天气提醒：纯户外高空峡谷，11月太行山顶风凉，备防风外套。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '新乡宝泉崖天下大峡谷 不废腿路线',
+        reserve: 'https://www.baoquanlvyou.com/jingqugaikuang.html',
+        gmap: '新乡宝泉旅游区'
+      },
+      {
+        name: '宝泉大峡谷美食街（中段能量补给）',
+        lat: 35.4905, lng: 113.4412,
+        type: 'food',
+        time: '12:15',
+        desc: '从L型洞穴电梯出来即达大峡谷核心餐饮区，热乎饸饹面、凉皮、烤肠快速补充体力。',
+        budget: '¥25–45/人',
+        detail: '🍜 补给建议：景区内没有大桌正餐必要，在峡谷美食街吃碗热汤面+自带巧克力和保温杯热水最实用。',
+        pay: { wechat: 1, alipay: 1 },
+        dianpingKeyword: '宝泉大峡谷 美食',
+        gmap: '宝泉大峡谷景区'
+      },
+      {
+        name: '宝泉大峡谷（见龙瀑 · 翡翠海 · 鱼鳞坝）',
+        lat: 35.4920, lng: 113.4430,
+        type: 'spot',
+        time: '13:00',
+        desc: '被誉为“中原小九寨”，碧绿潭水配赤色太行丹霞岩壁，沿亲水步道一路平缓往外走。',
+        budget: '含在双园联票内',
+        detail: '📸 必拍点：见龙瀑高空飞瀑、翡翠海玻璃水、游龙湾与鱼鳞坝。15:30前乘出园大巴回到游客中心取车，避免天黑走山路。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '宝泉大峡谷 翡翠海 拍照',
+        reserve: 'https://www.baoquanlvyou.com/yatianxia.html',
+        gmap: '宝泉大峡谷'
+      },
+      {
+        name: '自驾跨城：宝泉 → 登封市区（165km / 2.5h）',
+        lat: 34.8500, lng: 113.2500,
+        type: 'transport',
+        time: '16:00',
+        desc: '走郑云高速过黄河大桥转郑州绕城、郑少洛高速直达登封，全程高速路况极佳。',
+        detail: '🚗 驾驶提示：16:00前从宝泉发车，18:30左右抵达登封市区，刚好避开夜间疲劳驾驶。',
+        gmap: '登封市'
+      },
+      {
+        name: '嵩小满·山野食记 / 登封焦盖烧饼烩羊肉',
+        lat: 34.4535, lng: 113.0352,
+        type: 'food',
+        time: '18:45',
+        desc: '登封口碑山野豫菜与非遗名吃：芝麻焦盖烧饼夹焖羊肉、嵩山笨鸡煲、芥菜扣肉。',
+        budget: '¥45–75/人',
+        detail: '🍜 大众点评信号：登封必吃焦盖烧饼（外酥掉渣）配热腾腾的羊肉汤或山野土菜，爬山后极度治愈。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '登封美食 焦盖烧饼 嵩小满',
+        dianpingKeyword: '嵩小满山野食记 登封',
+        reserve: 'https://www.wingontravel.com/discovery/restaurant-154855269',
+        gmap: '登封市少林大道'
+      },
+      {
+        name: '登封市区/少林大道酒店（宿登封）',
+        lat: 34.4550, lng: 113.0380,
+        type: 'hotel',
+        time: '20:15',
+        desc: '入住登封市区或少林景区门口酒店（距少林寺游客中心约15–20分钟车程），早点休息蓄力Day 3。',
+        budget: '¥200–350/晚',
+        detail: '🏨 选址建议：住登封市区（守敬路/少林大道）吃饭买补给最方便，次日一早开车15分钟即达少林寺停车场。',
+        pay: { wechat: 1, alipay: 1, card: 1 },
+        gmap: '登封市'
+      }
+    ]
+  },
+  {
+    id: 3,
+    label: 'D3 少林·洛阳',
+    date: '11月5日 周四 · 少林寺 → 白马寺 → 16:00龙门石窟亮灯 → 应天门夜景还车',
+    title: 'D3 · 少林功夫 · 白马寺 · 龙门夜游 · 应天门',
+    color: '#af52de',
+    routeSummary: '🚗 动线：08:00 嵩山少林寺精华线（砍三皇寨！） → 12:30 驱车赴白马寺（65km/1h） → 15:00 赴龙门石窟（29km/50min） → 16:00 西山石窟入园 → 18:00 礼佛台看亮灯 → 19:20 应天门北广场+丽景门水席 → 洛阳还车住宿',
+    locations: [
+      {
+        name: '嵩山少林寺（常住院 + 武术馆 + 塔林）',
+        lat: 34.5072, lng: 112.9355,
+        type: 'spot',
+        time: '08:00',
+        desc: '禅宗祖庭、天下第一名刹。只走核心精华线（3.5h），严禁爬三皇寨，确保12:00前出园！',
+        budget: '门票 ¥80（含少林武术馆功夫表演）',
+        detail: '🥋 核心动线：\n1. 08:00入园步行700米先看【少林寺武术馆】真功表演（每场30分钟，提前20分钟进场占座）。\n2. 游览【常住院】：山门→天王殿→大雄宝殿→藏经阁→方丈室→立雪亭→千佛殿（看武僧练功踩出的48个脚窝）。\n3. 步行至【塔林】（中国最大古塔群），随后乘单程电瓶车（¥15）快速返程取车。\n✂️ 铁律：千万别上三皇寨索道，否则下午赶不上16:00的龙门石窟柔光时段！',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '嵩山少林寺 半日游 不爬山路线',
+        reserve: 'https://homegroundchina.com/zh/guides/shaolin-temple/',
+        gmap: '嵩山少林寺'
+      },
+      {
+        name: '永泰寺素食馆 / 少林景区简餐（快速午餐）',
+        lat: 34.5120, lng: 112.9420,
+        type: 'food',
+        time: '11:45',
+        desc: '出园前后快速吃一顿少林素斋或简餐面食，12:30准时发车上高速奔赴洛阳白马寺。',
+        budget: '¥35–60/人',
+        detail: '🍜 节奏提示：今天下午有严格的“16:00龙门入园”时间锚点，午餐控制在40分钟内。',
+        pay: { wechat: 1, alipay: 1 },
+        dianpingKeyword: '少林寺 素斋',
+        reserve: 'https://gs.ctrip.com/html5/you/foods/fooddetail/178/167780.html',
+        gmap: '少林寺永泰寺素斋'
+      },
+      {
+        name: '洛阳白马寺（中国第一古刹 + 四国佛殿）',
+        lat: 34.7218, lng: 112.6056,
+        type: 'spot',
+        time: '13:30',
+        desc: '距少林寺65km（高速约1h）。一次看齐中式古刹与印、缅、泰三国风格佛殿建筑群。',
+        budget: '门票 ¥35',
+        detail: '🏛️ 高效游览（1.5h）：先走古建中轴线（天王殿→大佛殿→大雄殿→接引殿→清凉台），再拐去西侧【国际佛殿苑】（泰国殿金碧辉煌、缅甸大金塔、印度桑奇大塔同款），15:00准时取车去龙门石窟。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '洛阳白马寺 拍照机位 路线',
+        reserve: 'https://gs.ctrip.com/html5/you/sight/luoyang198/8940.html',
+        gmap: '洛阳白马寺'
+      },
+      {
+        name: '龙门石窟 ⭐黄金柔光+亮灯连看',
+        lat: 34.5558, lng: 112.4705,
+        type: 'spot',
+        time: '16:00',
+        desc: '16:00从西山石窟入园追夕阳柔光，17:40在奉先寺或过漫水桥到礼佛台蹲守18:00–18:30亮灯！',
+        budget: '门票 ¥90（实名分时预约）',
+        detail: '✨ 完美摄影时刻表（按你的方案精校）：\n1. 15:50 停好车在【西北服务区】，乘电瓶车或步行至检票口。\n2. 16:00 进【西山石窟】：此时夕阳斜射，依次细看【宾阳三洞】（剪刀手佛与微笑佛）、【万佛洞】、直达核心【奉先寺（卢舍那大佛）】。\n3. 17:40 在奉先寺正面看完近景亮灯，或过【漫水桥】到伊河对岸【礼佛台】架机位。\n4. 18:00–18:30 全园亮灯！在礼佛台拍完灯光倒映伊河的卢舍那大佛远景后，直接从礼佛台乘电瓶车回西北服务区取车（不走回头路）。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '龙门石窟 亮灯时间 礼佛台 机位',
+        reserve: 'https://gs.ctrip.com/html5/you/sight/luoyang198/8865.html',
+        gmap: '洛阳龙门石窟'
+      },
+      {
+        name: '隋唐洛阳城应天门遗址（北广场免费夜景）',
+        lat: 34.6775, lng: 112.4582,
+        type: 'spot',
+        time: '19:30',
+        desc: '距龙门石窟约15km/35min。亮灯18:00–22:30，不用买票登楼，直接在北广场免费拍盛唐城门大片！',
+        budget: '外广场免费（登楼¥60不必买）',
+        detail: '⚠️ 重要情报核实：应天门北广场的【20:00/20:30 3D激光投影秀】仅在周末（周五/六/日）及法定节假日常态播放；11月5日是【周四】，当晚有绝美建筑亮灯但通常无3D激光秀（若想看激光秀可参考D6延展方案周五晚留洛阳）。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '洛阳应天门 北广场 免费机位',
+        reserve: 'http://m.xinhuanet.com/ha/2019-10/16/c_1125111326.htm',
+        gmap: '洛阳应天门遗址博物馆'
+      },
+      {
+        name: '洛阳市内还车点 & 老城区酒店',
+        lat: 34.6768, lng: 112.4620,
+        type: 'hotel',
+        time: '20:00',
+        desc: '在老城区/西工区或指定网点归还帕萨特，随后无车一身轻，步行开启老城夜游与美食。',
+        budget: '住宿约 ¥220–380/晚',
+        detail: '🚗 还车建议：预订租车时直接选“应天门/西工区/老城区门店”或支持“上门取车”的网点，免去跑龙门站还车再折返市区的麻烦。',
+        pay: { wechat: 1, alipay: 1, card: 1 },
+        gmap: '洛阳市老城区'
+      },
+      {
+        name: '丽景门 · 老城十字街 & 管记水席老店',
+        lat: 34.6798, lng: 112.4678,
+        type: 'food',
+        time: '20:30',
+        desc: '从应天门步行或骑行即达丽景门、十字街夜市。主推管记水席老店（牡丹燕菜、连汤肉片、焦炸丸子）。',
+        budget: '¥50–70/人',
+        detail: '🍜 大众点评信号：管记水席老店（仙果市街店）距十字街300米，本地老字号，酸辣胡椒味地道。\n📕 小红书提醒：水席汤汤水水分量很大，2个人点一荤一素两道水席代表菜（牡丹燕菜+连汤肉片或焦炸丸子）再加十字街烤肉串就够了！',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '洛阳管记水席 丽景门十字街',
+        dianpingKeyword: '管记水席老店 洛阳',
+        reserve: 'https://you.ctrip.com/food/198/106483.html',
+        gmap: '洛阳丽景门景区'
+      },
+      {
+        name: '洛邑古城（汉服夜景备选）',
+        lat: 34.6762, lng: 112.4785,
+        type: 'spot',
+        time: '—',
+        desc: '距丽景门约1.2km，文峰塔与古风灯笼水系极出片。若逛完应天门+丽景门还有体力可去。',
+        budget: '免费（需公众号扫码预约入园）',
+        detail: '🏮 贴士：晚间汉服旅拍密集，人流较大；如果走了一天少林+白马寺+龙门已经腿酸，逛完应天门和丽景门十字街即可回酒店休息。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '洛阳洛邑古城 夜景',
+        reserve: 'https://gs.ctrip.com/html5/you/travels/198/4097764.html',
+        gmap: '洛阳洛邑古城'
+      },
+      {
+        name: '真不同饭店（中州东路总店 · 水席备选）',
+        lat: 34.6805, lng: 112.4712,
+        type: 'food',
+        time: '—',
+        desc: '中华老字号洛阳水席旗舰店，宫廷装修风格，饭点常有豫剧或唐风演绎。',
+        budget: '¥80–110/人',
+        detail: '🍜 大众点评信号：环境比街头小店更好，可点“不同四味”小份拼盘一次尝遍四道水席名菜。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '洛阳真不同水席',
+        dianpingKeyword: '真不同饭店 中州东路店',
+        reserve: 'https://tw.trip.com/guide/attraction/%E5%B0%91%E6%9E%97%E5%AF%BA%E9%96%80%E7%A5%A8.html',
+        gmap: '洛阳真不同饭店'
+      }
+    ]
+  },
+  {
+    id: 4,
+    label: 'D4 洛阳·开封',
+    date: '11月6日 周五 · 洛阳博物馆 → 高铁赴开封 → 开封府/延庆观/大相国寺/鼓楼夜市',
+    title: 'D4 · 洛阳博物馆 · 高铁赴汴 · 古城中轴',
+    color: '#007aff',
+    routeSummary: '🚄 动线：08:30 南关小碗牛肉汤 → 09:30 洛阳博物馆 → 12:00 小街天府午餐 → 13:30 洛阳龙门站乘高铁赴开封北站（车程1h07m） → 15:30 开封府 + 延庆观 + 大相国寺 → 18:30 黄家老店/第一楼 + 鼓楼夜市',
+    locations: [
+      {
+        name: '河洛郑波·南关小碗牛肉汤 / 马杰山牛肉汤',
+        lat: 34.6730, lng: 112.4760,
+        type: 'food',
+        time: '08:30',
+        desc: '洛阳“汤都”灵魂晨间仪式：一碗鲜醇滚烫的牛肉汤，泡上焦脆饼丝或油旋，免费添汤！',
+        budget: '¥15–25/人',
+        detail: '🍜 大众点评信号：南关小碗牛肉汤汤清味浓，马杰山则是东关百年清真老店；记住洛阳喝汤规矩——早上喝头汤最鲜。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '洛阳南关小碗牛肉汤 马杰山',
+        dianpingKeyword: '南关小碗牛肉汤 洛阳',
+        reserve: 'https://you.ctrip.com/food/198/106412.html',
+        gmap: '洛阳南关小碗牛肉汤'
+      },
+      {
+        name: '洛阳博物馆 ⭐十三朝国宝',
+        lat: 34.6572, lng: 112.4518,
+        type: 'spot',
+        time: '09:30',
+        desc: '周五上午继续逛洛阳的最佳去处！直奔2楼珍宝馆看曹魏白玉杯、北魏泥塑佛面像、唐三彩黑釉马。',
+        budget: '免费（需提前3–5天公众号预约）',
+        detail: '🏛️ 为什么选洛博：完美补齐龙门石窟之外的十三朝帝都文物脉络，馆内恒温舒适，打车去洛阳龙门高铁站仅15分钟。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '洛阳博物馆 珍宝馆 必看',
+        reserve: 'http://www.lymuseum.com/',
+        gmap: '洛阳博物馆'
+      },
+      {
+        name: '小街天府（西工小街店 · 午餐）',
+        lat: 34.6745, lng: 112.4435,
+        type: 'food',
+        time: '12:00',
+        desc: '洛阳国民级小吃食堂：糖醋麻辣小土豆、担担面、小街锅贴、桂花米酒，出餐极快不耽误高铁。',
+        budget: '¥25–40/人',
+        detail: '🍜 大众点评信号：全天候营业、翻台极快，糖醋麻辣双拼小土豆几乎桌桌必点。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '洛阳小街天府 必点',
+        dianpingKeyword: '小街天府 洛阳',
+        reserve: 'https://hk.trip.com/moments/theme/poi-city-164061-guides-993135/',
+        gmap: '洛阳小街天府'
+      },
+      {
+        name: '高铁跨城：洛阳龙门站 → 开封北站',
+        lat: 34.5932, lng: 112.4552,
+        type: 'transport',
+        time: '13:30',
+        desc: '高铁直达开封北站仅需约1小时07分（加上进出站打车共约1.5h），下午15:00即可投宿开封鼓楼片区。',
+        budget: '高铁二等座 ¥96起',
+        detail: '🚄 动线关键调整：为什么周五下午不去万岁山？因为万岁山《打铁花》当天14:30/15:00必须入园核销后才能抢预约码！周五下午你刚下高铁赶过去已经过了放号点。把周五下午留给开封府+延庆观+大相国寺，周六全天泡万岁山才是最稳解法！',
+        reserve: 'https://train.qunar.com/train/timetable/G1812/luoyanglongmen-to-kaifengbei/2026-11-06',
+        gmap: '洛阳龙门站'
+      },
+      {
+        name: '开封府（天下首府）',
+        lat: 34.7872, lng: 114.3496,
+        type: 'spot',
+        time: '15:30',
+        desc: '北宋第一府衙，位于包公东湖北岸。看府衙大堂、梅花堂、清心楼及西北角天庆观太极八卦台。',
+        budget: '门票 ¥65',
+        detail: '🏛️ 顺路串联：开封府、延庆观、大相国寺、鼓楼广场全部集中在老城2公里半径内，步行或骑共享单车就能丝滑串完。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '开封府 游玩路线',
+        reserve: 'https://gs.ctrip.com/html5/you/sight/kaifeng165/61455.html',
+        gmap: '开封府'
+      },
+      {
+        name: '延庆观（元代玉皇阁 · 原计划“延庆寺”）',
+        lat: 34.7895, lng: 114.3442,
+        type: 'spot',
+        time: '16:30',
+        desc: '距开封府步行仅6分钟！现存罕见的元代道观建筑，通体无梁木、汉蒙建筑交融的玉皇阁极具古韵。',
+        budget: '门票 ¥30',
+        detail: '📌 名称勘误：你原计划写的“延庆寺”在开封即为国保单位【延庆观】（纪念全真教丘处机之地），紧挨着包公湖与开封府，人少清幽，逛30–40分钟即可。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '开封延庆观 玉皇阁',
+        reserve: 'https://gs.ctrip.com/html5/you/sight/kaifeng165/9460.html',
+        gmap: '开封延庆观'
+      },
+      {
+        name: '大相国寺（北宋皇家古刹）',
+        lat: 34.7932, lng: 114.3528,
+        type: 'spot',
+        time: '17:10',
+        desc: '“大相国寺天下雄”，鲁智深倒拔垂杨柳之地，核心必看八角琉璃殿内整棵银杏木雕成的四面千手千眼观音。',
+        budget: '门票 ¥40（17:30停止入场）',
+        detail: '⏰ 时间提醒：大相国寺17:30停止检票、18:00清场，从延庆观骑车5分钟过来刚好赶在夕阳落山前逛完，出寺门就是寺后街第一楼和鼓楼广场！',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '开封大相国寺 八角琉璃殿',
+        reserve: 'https://gs.ctrip.com/html5/you/sight/kaifeng165/9458.html',
+        gmap: '开封大相国寺'
+      },
+      {
+        name: '黄家老店 / 第一楼灌汤包（宋菜正餐）',
+        lat: 34.7945, lng: 114.3510,
+        type: 'food',
+        time: '18:15',
+        desc: '开封灌汤包与桶子鸡双雄：黄家老店本地口碑更稳，第一楼就在大相国寺隔壁（寺后街总店）最顺路。',
+        budget: '¥55–85/人',
+        detail: '🍜 大众点评信号：黄家老店的桶子鸡咸香有嚼劲、灌汤包皮薄汤鲜；第一楼适合点什锦灌汤包+鲤鱼焙面。\n📕 小红书提醒：“轻轻提、慢慢移、先开窗、后喝汤”，千万别一口咬下去烫嘴！',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '开封黄家老店 第一楼灌汤包',
+        dianpingKeyword: '黄家老店 开封',
+        reserve: 'https://you.ctrip.com/food/165/11169507.html',
+        gmap: '开封第一楼寺后街总店'
+      },
+      {
+        name: '鼓楼广场 · 鼓楼夜市（夜游逛吃）',
+        lat: 34.7960, lng: 114.3542,
+        type: 'food',
+        time: '19:45',
+        desc: '中国最早打破坊市宵禁的北宋夜市传承地！沿鼓楼、马道街、书店街一路逛吃羊肉炕馍、杏仁茶、炒凉粉。',
+        budget: '¥20–50/人',
+        detail: '🏮 夜市攻略：鼓楼夜景灯火辉煌，旁边书店街适合散步消食；若想体验更接地气的本地夜市，也可打车10分钟去【西司夜市】。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '开封鼓楼夜市 必吃小吃',
+        dianpingKeyword: '鼓楼夜市 开封',
+        reserve: 'http://221.176.159.209:9001/kfsglqwz/c00173/pc/content/content_2052670647879380992.html',
+        gmap: '开封鼓楼夜市'
+      },
+      {
+        name: '开封鼓楼/大相国寺片区酒店（宿开封）',
+        lat: 34.7950, lng: 114.3505,
+        type: 'hotel',
+        time: '21:30',
+        desc: '住在鼓楼或大相国寺周边，吃喝处于C位，次日去万岁山武侠城和开封火车站都只需15分钟车程。',
+        budget: '¥200–350/晚',
+        pay: { wechat: 1, alipay: 1, card: 1 },
+        gmap: '开封市鼓楼区'
+      },
+      {
+        name: '西司夜市（本地烟火备选）',
+        lat: 34.7938, lng: 114.3385,
+        type: 'food',
+        time: '—',
+        desc: '包公祠北侧的本地人宝藏夜市，物价更亲民，二嫂羊肉炕馍、袋装杏仁茶、黄焖鱼人气极高。',
+        budget: '¥20–40/人',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '开封西司夜市 必吃',
+        dianpingKeyword: '西司夜市 开封',
+        reserve: 'https://travelnews.qunar.com/qa_strategy/kaifeng-budget-food-travel-guide-wanshuishan',
+        gmap: '开封西司夜市'
+      }
+    ]
+  },
+  {
+    id: 5,
+    label: 'D5 万岁山·返杭',
+    date: '11月7日 周六 · 万岁山武侠城全天 + 14:30抢号 + 城寨沙场打铁花 → 22:00返杭',
+    title: 'D5 · 万岁山武侠城 · 打铁花秘籍 · 22:00返杭',
+    color: '#ff2d55',
+    routeSummary: '⚔️ 动线：08:30 四味烩菜/邢家锅贴 → 09:30 万岁山武侠城入园（寄存行李） → 14:30 园内准时抢19:30/第一场打铁花预约码 → 18:40 进北区【城寨沙场】8–15排占座 → 20:10–20:30 看第一场打铁花 → 20:35 北门东京大道步行600m打车 → 22:00 开封站火车回杭',
+    locations: [
+      {
+        name: '赵家名吃四味烩菜 / 稻香居邢家锅贴',
+        lat: 34.7918, lng: 114.3550,
+        type: 'food',
+        time: '08:30',
+        desc: '开封硬核早午餐：一碗羊汤四味菜（面筋、牛肉丸、黄花菜、酥肉）配白吉馍，或焦脆流汁的三鲜锅贴。',
+        budget: '¥15–30/人',
+        detail: '🍜 大众点评信号：东大寺门食品街的赵家四味菜是本地早餐顶流；吃饱后退房，带行李去万岁山游客中心免费寄存（方便晚上看完打铁花直接从万岁山北门奔火车站，不用回酒店折返！）。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '开封东大寺四味菜 邢家锅贴',
+        dianpingKeyword: '赵家名吃四味烩菜 开封',
+        reserve: 'https://you.ctrip.com/food/165/16004487.html',
+        gmap: '开封东大寺清真美食街'
+      },
+      {
+        name: '万岁山大宋武侠城（白天演艺 + 14:30抢号）',
+        lat: 34.8192, lng: 114.3425,
+        type: 'spot',
+        time: '09:30',
+        desc: '80元门票含上百场实景武侠剧！必看《三打祝家庄》《神舟传奇》《王婆说媒》，14:30准时在园内抢打铁花！',
+        budget: '门票 ¥80（3天内无限次入园）',
+        detail: '⏰ 预约放号铁律：\n• 《打铁花》进园检票后免费实名预约！常规场次 19:30、21:00（周六客流大常加演）。\n• 放号时间：【14:30 抢第一场】、【15:00 抢第二场】。因为你今晚要赶 22:00 的火车，【必须定好14:28闹钟死磕第一场（20:10–20:30上演）】！\n• 园内物价极良心：矿泉水¥1.5，午餐直接在园内十字坡/水浒街吃小吃即可。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '开封万岁山武侠城 节目单 必看演出',
+        reserve: 'https://gs.ctrip.com/html5/you/sight/kaifeng165/77323.html',
+        gmap: '开封万岁山大宋武侠城'
+      },
+      {
+        name: '北区【城寨沙场】看台 ⭐打铁花占座秘诀',
+        lat: 34.8235, lng: 114.3432,
+        type: 'spot',
+        time: '18:40',
+        desc: '18:40–19:00直接进城寨沙场环形大看台落座！选正对舞台中央【第8至15排】，看完前序马战原地不动连看打铁花！',
+        budget: '免费实名预约核销',
+        detail: '🔥 独家实操秘籍（完全融合你的笔记）：\n1. 【千万别等20:00再去排队】：届时看台早已封控满员！18:40–19:00进场先看前一场大型马术实景剧（如夜场《三打祝家庄》或《神舟传奇》），演完原地绝对不要起身离开，直接连看 20:10–20:30 的《打铁花》（演出约15–20分钟）！\n2. 【黄金排数 8–15 排】：打铁花结合水上火壶、风火轮与高空铁水击打，前3排偶有细碎铁屑火星顺风飘落，秋冬穿的羽绒服、冲锋衣极易被烫出小破洞。坐正中第8–15排，既能拍出漫天金雨倒映水面全景，又绝对安全！\n3. 【散场防堵撤离】：20:30打铁花一结束，立刻从【北门】出园，顺着【东京大道】往东或往西步行500–800米离开拥堵核心区再打车！',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '万岁山打铁花 城寨沙场 座位攻略',
+        reserve: 'https://kf.bendibao.com/tour/jingdian/list10.htm',
+        gmap: '万岁山大宋武侠城北门'
+      },
+      {
+        name: '开封站（22:00 火车返杭）',
+        lat: 34.7745, lng: 114.3512,
+        type: 'transport',
+        time: '21:15',
+        desc: '从东京大道打车约20–25分钟抵达开封站，从容安检候车，搭乘22:00火车返回杭州。',
+        budget: '硬卧/软卧返杭',
+        detail: '🚂 衔接时间账：20:30打铁花结束 → 20:45取完寄存行李并走出东京大道拥堵段 → 21:15抵达开封站 → 22:00发车回杭，时间刚刚好！',
+        reserve: 'https://train.qunar.com/train/tickets/kaifeng-to-hangzhou',
+        gmap: '开封火车站'
+      }
+    ]
+  },
+  {
+    id: 6,
+    label: 'D6 延展方案',
+    date: '11月8日 周日（可选+1天方案） · 若延至11.8晚返杭的满配玩法',
+    title: 'D6 · 可选延展日 · 清明上河园 & 城墙漫游',
+    color: '#5856d6',
+    routeSummary: '✨ 6天满配逻辑：如果能加一天到11.8周日晚回杭，11.7周六晚看完打铁花就不用赶22:00火车！11.8周日白天可慢逛【清明上河园】或【开封城墙+铁塔公园】，傍晚从开封北站/郑州东站乘高铁5.5h回杭州东。',
+    locations: [
+      {
+        name: '清明上河园（宋代皇家园林与民俗沉浸）',
+        lat: 34.8085, lng: 114.3418,
+        type: 'spot',
+        time: '09:00',
+        desc: '5天版建议砍掉，6天版强烈推荐补上！按1:1复原张择端名画，虹桥、上善门、岳飞枪挑小梁王、包公迎宾极出片。',
+        budget: '门票 ¥120',
+        detail: '🎨 万岁山 vs 清明上河园：万岁山赢在热血江湖互动与打铁花；清明上河园赢在精致宋式建筑美学与古风拍照。多留11.8一天，两个王牌景区都能从容玩透！',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '开封清明上河园 必看演出 拍照',
+        reserve: 'https://travelnews.qunar.com/qa_strategy/kaifeng-qingmingshangheyuan-vs-wansuishan-wuxiacity-travel-guide',
+        gmap: '开封清明上河园'
+      },
+      {
+        name: '开封城墙（大梁门 · 古马道城摞城遗址）',
+        lat: 34.8025, lng: 114.3325,
+        type: 'spot',
+        time: '14:00',
+        desc: '中国第二大古代城垣建筑，在大梁门看“城摞城”地下6层古城奇观，在城墙步道骑行吹秋风。',
+        budget: '门票 ¥40',
+        detail: '🧱 轻松备选：如果不想连逛两个大型主题公园，11.8上午逛开封城墙+铁塔公园（天下第一琉璃塔），下午喝茶买花生糕伴手礼，节奏极度惬意。',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '开封城墙 大梁门 城摞城',
+        reserve: 'https://gs.ctrip.com/html5/you/sight/kaifeng165/126811.html',
+        gmap: '开封城墙大梁门'
+      },
+      {
+        name: '兴盛德花生糕（伴手礼采购）',
+        lat: 34.7905, lng: 114.3485,
+        type: 'food',
+        time: '16:00',
+        desc: '返程前必带的开封非遗伴手礼：兴盛德麻辣花生与传统千层花生糕，入口即化。',
+        budget: '¥30–60/人',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '开封兴盛德花生 花生糕 伴手礼',
+        dianpingKeyword: '兴盛德花生 开封',
+        reserve: 'https://you.ctrip.com/food/0/7577515.html',
+        gmap: '开封兴盛德花生'
+      },
+      {
+        name: '开封北站 / 郑州东站（高铁返杭）',
+        lat: 34.8465, lng: 114.2580,
+        type: 'transport',
+        time: '17:30',
+        desc: '从开封北站直达杭州东（或20分钟高铁到郑州东中转），最快5个多小时当晚即达杭州。',
+        budget: '高铁二等座 ¥400–450',
+        reserve: 'https://train.qunar.com/train/tickets/hangzhou-to-kaifengbei/2026-11-10',
+        gmap: '开封北站'
+      }
+    ]
+  }
+];
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  Overview Tab Content                                        ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+function overviewContent() {
+  return `
+<div class="hero">
+  <h1>河南五城参考行程地图</h1>
+  <p class="subtitle">11.3 周二 – 11.7 周六（可选延至 11.8） · 郑州 / 宝泉 / 登封 / 洛阳 / 开封</p>
+</div>
+<div class="info-grid">
+  <div class="info-card"><div class="label">住宿落脚</div><div class="value">D1郑州 · D2登封<br>D3-4洛阳 · D4-5开封</div></div>
+  <div class="info-card"><div class="label">交通组合</div><div class="value">D1晚提帕萨特自驾<br>D3晚洛阳还车+高铁</div></div>
+  <div class="info-card"><div class="label">核心抢票锚点</div><div class="value">河博提前5天17:00<br>打铁花当日14:30</div></div>
+  <div class="info-card"><div class="label">行程弹性</div><div class="value">5天标准版（周六返）<br>6天满配版（周日返）</div></div>
+</div>
+
+<div class="pay-summary" style="border-left: 4px solid var(--accent);">
+  <h4>📱 手机端打开 & 唤醒高德地图 App 指南</h4>
+  • <strong>方法1（最丝滑 · 生成专属手机网页）：</strong>将本网页部署到免费静态托管（如 Vercel、Netlify Drop 或 GitHub Pages），手机用 Safari / Chrome 打开后点击分享 → <strong>「添加到主屏幕」</strong>，即可像独立 App 一样全屏使用！<br>
+  • <strong>方法2（直接传文件到手机）：</strong>下载源码包中的 <code>henan-trip-map.html</code> 发到手机，选择<strong>「用系统浏览器（Safari / Chrome / 夸克）打开」</strong>（不要停留在微信内置预览页，否则微信会拦截 App 唤醒协议）。<br>
+  • <strong>高德 App 一键跳转：</strong>在手机上点击任一地点的 <strong>「📍 导航」</strong>，选择 <strong>「🧭 高德地图 App（查看位置）」</strong> 或 <strong>「🚗 高德地图 App（一键路线导航）」</strong>，即可直接唤醒手机里的高德地图 App！
+</div>
+<div class="section-head">每日行程速览（点击切换地图与时间轴）</div>
+<div class="day-list">${DAYS.slice(1).map(d=>`<div class="card" onclick="go(${d.id})"><div class="name"><span class="dot" style="background:${d.color}"></span>${d.label} · ${d.title.split('·').slice(1).join('·')}</div><div class="desc">${d.date}</div></div>`).join('')}</div>
+
+<div class="section-head">路线诊断：替你砍了什么、调了什么？</div>
+<div class="pay-summary">
+  <h4>1. 关键动线调优：万岁山移至 11.7 周六全天</h4>
+  <span class="warn">原计划隐患：</span>万岁山《打铁花》必须在<strong>入园核销后</strong>，于当天 <strong>14:30 / 15:00</strong> 在小程序实名抢号。若 11.6 周五下午才从洛阳坐高铁去开封，到园早已错过 15:00 放号！<br>
+  <span class="ok-text">优化方案：</span>11.6 周五下午逛开封府 + 延庆观（原写延庆寺） + 大相国寺 + 鼓楼夜市；<strong>11.7 周六一早进万岁山存行李，14:30 在园内稳抢第一场打铁花</strong>，18:40 坐城寨沙场 8–15 排，20:30 看完从北门东京大道撤离赶 22:00 火车！
+</div>
+<div class="pay-summary">
+  <h4>2. 主动减法：砍掉 3 个高风险累赘点</h4>
+  • <strong>砍 D1 瑞光创意工厂（降为备选）：</strong>与 1952 油化厂同质化极高，专心逛油化厂更出片。<br>
+  • <strong>砍 D3 少林寺三皇寨爬山线：</strong>为保下午白马寺与 <strong>16:00 龙门石窟柔光入园</strong>，少林寺只走常住院+武术馆+塔林（12:00前撤离）。<br>
+  • <strong>砍 5天版清明上河园（放入D6延展）：</strong>避免与万岁山同日死磕导致审美疲劳；若加一天到 11.8 周日返杭则完美补齐。
+</div>
+
+<div class="section-head">抢票与防坑硬核备忘</div>
+<div class="pay-summary">
+  <h4>⏰ 两大必设闹钟</h4>
+  • <span class="accent-text">河南博物院：</span>提前 5 天 <strong>17:00</strong> 放票（11.3 周二参观需在 <strong>10月29日 17:00</strong> 准时抢）。<br>
+  • <span class="warn">万岁山《打铁花》：</span>入园后免费实名预约，<strong>14:30 抢 19:30/第一场，15:00 抢第二场</strong>。18:40 进北区【城寨沙场】<strong>第 8–15 排</strong>（防前3排火星烫坏羽绒服/冲锋衣），看完前序马战原地不动连看打铁花！散场走<strong>北门沿东京大道步行 500–800 米</strong>再打车。<br>
+  • <span class="accent-text">应天门激光秀提醒：</span>11.5 是周四，应天门北广场 18:00–22:30 正常亮灯可免费拍大片，但 20:00/20:30 的 3D 激光投影秀仅在周末/节假日常态播放。
+</div>
+
+<div class="section-head">图例</div>
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-red)"></div>餐厅/夜市</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-blue)"></div>景点</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-orange)"></div>酒店/租还车</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--text-tertiary)"></div>交通枢纽</div>
+</div>`;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ENGINE                                                      ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const map = L.map('map', { center: [HOTEL.lat || 34.75, HOTEL.lng || 113.66], zoom: 8, zoomControl: false, attributionControl: true });
+L.control.zoom({ position: 'topright' }).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+
+/* ── Geolocation ── */
+const LocateControl = L.Control.extend({
+  options: { position: 'bottomright' },
+  onAdd() {
+    const btn = L.DomUtil.create('button', 'locate-btn');
+    btn.innerHTML = '📍';
+    btn.title = '我的位置';
+    L.DomEvent.disableClickPropagation(btn);
+    btn.addEventListener('click', () => {
+      btn.classList.add('active');
+      map.locate({ setView: true, maxZoom: 15 });
+    });
+    this._btn = btn;
+    return btn;
+  }
+});
+new LocateControl().addTo(map);
+let locMarker, locCircle;
+map.on('locationfound', e => {
+  const r = e.accuracy / 2;
+  if (locMarker) { locMarker.setLatLng(e.latlng); locCircle.setLatLng(e.latlng).setRadius(r); }
+  else {
+    locMarker = L.marker(e.latlng, {
+      icon: L.divIcon({ className:'', html:'<div style="width:14px;height:14px;border-radius:50%;background:#007aff;border:2.5px solid #fff;box-shadow:0 0 6px rgba(0,122,255,.5)"></div><div class="loc-pulse" style="position:absolute;top:0;left:0"></div>', iconSize:[14,14], iconAnchor:[7,7] }),
+      zIndexOffset: 2000
+    }).addTo(map);
+    locCircle = L.circle(e.latlng, { radius: r, color: '#007aff', fillColor: '#007aff', fillOpacity: .08, weight: 1 }).addTo(map);
+  }
+});
+map.on('locationerror', () => {});
+
+function icon(color, emoji) {
+  return L.divIcon({ className: '', html: `<div style="width:28px;height:28px;border-radius:50%;background:${color};border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.18)">${emoji||''}</div>`, iconSize: [28,28], iconAnchor: [14,14], popupAnchor: [0,-16] });
+}
+
+let markers = [], polylines = [];
+const emojis = { food:'🍽️', spot:'📍', hotel:'🏨', transport:'🚄', drink:'🍵' };
+
+function clearMap() { markers.forEach(m=>map.removeLayer(m)); polylines.forEach(p=>map.removeLayer(p)); markers=[]; polylines=[]; }
+
+function showDay(idx) {
+  clearMap();
+  if (idx === 0) {
+    const pts = [];
+    DAYS.forEach(d => d.locations.forEach(l => { if(l.lat) pts.push([l.lat,l.lng]); }));
+    if(pts.length) map.fitBounds(pts, {padding:[30,30]});
+    DAYS.slice(1).forEach(d => {
+      const dayPts = [];
+      d.locations.filter(l=>l.time!=='—').forEach(l => {
+        dayPts.push([l.lat, l.lng]);
+        const m = L.circleMarker([l.lat,l.lng], { radius:5, fillColor:d.color, color:'#fff', weight:1.5, fillOpacity:.92 }).addTo(map).bindPopup(`<b>${l.name}</b><br><span style="color:#86868b">${d.label} · ${l.time}</span>`);
+        markers.push(m);
+      });
+      if(dayPts.length > 1) {
+        const pl = L.polyline(dayPts, { color:d.color, weight:2, opacity:.45, dashArray:'4,4' }).addTo(map);
+        polylines.push(pl);
+      }
+    });
+    return;
+  }
+  const day = DAYS.find(d=>d.id===idx);
+  if(!day) return;
+  const coords = [];
+  day.locations.forEach(l => {
+    if(!l.lat) return;
+    const m = L.marker([l.lat,l.lng], { icon: icon(day.color, emojis[l.type]||'📌') }).addTo(map);
+    const gmapQ = l.gmap||encodeURIComponent(l.name);
+    const safeName = l.name.replace(/'/g,"\\'");
+    m.bindPopup(`<b>${l.name}</b>${l.time!=='—'?'<br><span style="color:#86868b">'+l.time+'</span>':''}<br>${l.desc}${l.budget?'<br><span style="color:#ff9500">'+l.budget+'</span>':''}<br><button type="button" class="popup-nav-btn" onclick="openAS('${safeName}',${l.lat},${l.lng},'${gmapQ}')">📍 导航</button>${l.reserve?' · <a href="'+l.reserve+'" target="_blank" rel="noopener">🔗 详情/预约</a>':''}`);
+    markers.push(m);
+    if(l.time!=='—') coords.push([l.lat,l.lng]);
+  });
+  if(coords.length>1) { const pl = L.polyline(coords, { color:day.color, weight:2.5, opacity:.55, dashArray:'6,5' }).addTo(map); polylines.push(pl); }
+  if(coords.length) map.fitBounds(coords, { padding:[40,40], maxZoom:14 });
+}
+
+// ══════════ RENDER ══════════
+function payChips(pay) {
+  if(!pay) return '';
+  let h = '<div class="pays">';
+  const m = { wechat:'💚 微信支付', alipay:'💙 支付宝', card:'💳 刷卡/信用免押', cash:'💴 现金' };
+  for(const [k,label] of Object.entries(m)) {
+    if(pay[k]!==undefined) { const c = pay[k]===1?'ok':pay[k]===0.5?'idk':'no'; h += `<span class="pay ${c}">${label}</span>`; }
+  }
+  return h+'</div>';
+}
+
+const IN_APP_WEBVIEW = (() => {
+  const ua = (navigator.userAgent || '').toLowerCase();
+  return /micromessenger|xhs|xhsdiscover|discover\/|tiktok|aweme|weibo|qq\/|qqbrowser|alipayclient|dingtalk|lark|feishu|ucbrowser|baiduboxapp|toutiao|newsarticle/.test(ua);
+})();
+
+function xhsKeyword(loc) {
+  if(loc.xhsKeyword) return loc.xhsKeyword.trim();
+  return (loc.name||'').replace(/⭐.*$/g,'').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').replace(/\s+/g,' ').trim();
+}
+function xhsAppUrl(loc) { return `xhsdiscover://search/result?keyword=${encodeURIComponent(xhsKeyword(loc))}&target_search=notes&source=deeplink`; }
+function xhsWebUrl(loc) { return `https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(xhsKeyword(loc))}&source=web_explore_feed`; }
+
+function dpKeyword(loc) {
+  if(loc.dianpingKeyword) return loc.dianpingKeyword.trim();
+  return (loc.name||'').replace(/⭐.*$/g,'').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').replace(/\s+/g,' ').trim();
+}
+function dpAppUrl(loc) { return `dianping://searchshoplist?keyword=${encodeURIComponent(dpKeyword(loc))}`; }
+function dpWebUrl(loc) { return `https://m.dianping.com/searchshop?keyword=${encodeURIComponent(dpKeyword(loc))}`; }
+
+window._extLocs = {};
+DAYS.forEach(d => d.locations.forEach(l => { window._extLocs[`${d.id}::${l.name}`] = l; }));
+window._xhsLocs = window._extLocs;
+
+const IS_MOBILE = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent || '');
+function openExt(key, kind) {
+  const loc = window._extLocs[key]; if(!loc) return false;
+  if (IS_MOBILE && !IN_APP_WEBVIEW) {
+    window.location.href = kind==='dp' ? dpAppUrl(loc) : xhsAppUrl(loc);
+  } else {
+    window.open(kind==='dp' ? dpWebUrl(loc) : xhsWebUrl(loc), '_blank');
+  }
+  return false;
+}
+function openXhs(key) { return openExt(key, 'xhs'); }
+function openDp(key)  { return openExt(key, 'dp'); }
+
+function locCard(loc, dayIdx) {
+  const dot = loc.type==='food'?'food':loc.type==='spot'?'spot':loc.type==='drink'?'drink':loc.type==='hotel'?'hotel':'transport';
+  const bdg = loc.type==='food'?'<span class="badge food">餐</span>':loc.type==='spot'?'<span class="badge spot">景</span>':loc.type==='drink'?'<span class="badge drink">饮</span>':loc.type==='hotel'?'<span class="badge hotel">住/车</span>':'<span class="badge transport">行</span>';
+  const uid = `d${dayIdx}-${loc.name.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g,'')}`;
+  const locKey = `${dayIdx}::${loc.name}`;
+  const gmapQ = loc.gmap||encodeURIComponent(loc.name);
+  let lnk = `<button type="button" class="btn nav" onclick="openAS('${loc.name.replace(/'/g,"\\'")}',${loc.lat},${loc.lng},'${gmapQ}')">📍 导航</button>`;
+  if(loc.xhs||loc.xhsKeyword) {
+    const xhsHref = xhsWebUrl(loc);
+    lnk += `<a href="${xhsHref}" target="_blank" rel="noopener" onclick="return openXhs('${locKey.replace(/'/g,"\\'")}')" class="btn xhs">📕 小红书</a>`;
+  }
+  const dpEnabled = loc.dianping !== false &&
+    (loc.dianping || loc.dianpingKeyword || loc.type==='food' || loc.type==='drink');
+  if(dpEnabled) {
+    const dpHref = dpWebUrl(loc);
+    lnk += `<a href="${dpHref}" target="_blank" rel="noopener" onclick="return openDp('${locKey.replace(/'/g,"\\'")}')" class="btn dp">🍜 大众点评</a>`;
+  }
+  if(loc.reserve) lnk += `<a href="${loc.reserve}" target="_blank" rel="noopener" class="btn rsv">📅 官网/指南</a>`;
+  return `<div class="tl-item"><div class="tl-dot ${dot}"></div><div class="card" onclick="if(!event.target.closest('.btn,.links'))toggle('${uid}')"><div class="time">${loc.time!=='—'?loc.time:'备选'}</div><div class="name">${bdg} ${loc.name}</div><div class="desc">${loc.desc}</div>${loc.budget?'<div class="budget">'+loc.budget+'</div>':''}${payChips(loc.pay)}<div class="links">${lnk}</div>${loc.detail?'<div class="details" id="'+uid+'">'+loc.detail.replace(/\n/g,'<br>')+'</div>':''}</div></div>`;
+}
+
+function renderDay(idx) {
+  const d = DAYS.find(x=>x.id===idx); if(!d) return '';
+  const main = d.locations.filter(l=>l.time!=='—');
+  const alt = d.locations.filter(l=>l.time==='—');
+  let h = `<div class="day-head"><h2>${d.title}</h2><p>${d.date}</p></div>`;
+  if(d.routeSummary) h += `<div class="route-bar">${d.routeSummary}</div>`;
+  if(main.length) { h += '<div class="section-head">当日主线行程（点击卡片收起/展开秘籍）</div><div class="timeline">'; main.forEach(l => h += locCard(l, idx)); h += '</div>'; }
+  if(alt.length) { h += '<div class="section-head">顺路备选与替换项</div><div class="timeline">'; alt.forEach(l => h += locCard(l, idx)); h += '</div>'; }
+  return h;
+}
+
+// ══════════ NAV ══════════
+let cur = 0;
+const tabsEl = document.getElementById('tabs');
+const contentEl = document.getElementById('content');
+
+DAYS.forEach(d => {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'tab' + (d.id===0?' active':'');
+  btn.dataset.day = d.id;
+  btn.textContent = d.label;
+  tabsEl.appendChild(btn);
+});
+
+function go(idx) {
+  cur = idx;
+  tabsEl.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', +t.dataset.day===idx));
+  contentEl.innerHTML = idx===0 ? overviewContent() : renderDay(idx);
+  showDay(idx);
+  window.scrollTo({top:0, behavior:'smooth'});
+  const tab = tabsEl.querySelector(`[data-day="${idx}"]`);
+  if(tab) tab.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+}
+
+function toggle(id) { const el=document.getElementById(id); if(el) el.classList.toggle('closed'); }
+
+tabsEl.addEventListener('click', e => { const t=e.target.closest('.tab'); if(t) go(+t.dataset.day); });
+
+go(0);
+
+/* ── Action Sheet for Navigation ── */
+const asOverlay = document.createElement('div');
+asOverlay.className = 'as-overlay';
+asOverlay.innerHTML = `<div class="as-sheet">
+  <div class="as-group" id="as-opts"></div>
+  <div class="as-group"><button type="button" class="as-item as-cancel" onclick="closeAS()">取消</button></div>
+</div>`;
+document.body.appendChild(asOverlay);
+asOverlay.addEventListener('click', e => { if (e.target === asOverlay) closeAS(); });
+
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent || '');
+const IS_ANDROID = /Android/i.test(navigator.userAgent || '');
+
+function amapAppUrl(name, lat, lng) {
+  const scheme = IS_IOS ? 'iosamap' : 'androidamap';
+  return `${scheme}://viewMap?sourceApplication=trip&poiname=${encodeURIComponent(name)}&lat=${lat}&lon=${lng}&dev=1`;
+}
+function amapNaviAppUrl(name, lat, lng) {
+  const scheme = IS_IOS ? 'iosamap' : 'androidamap';
+  return `${scheme}://navi?sourceApplication=trip&poiname=${encodeURIComponent(name)}&lat=${lat}&lon=${lng}&dev=1&style=2`;
+}
+function amapWebUrl(name, lat, lng) {
+  return `https://uri.amap.com/marker?position=${lng},${lat}&name=${encodeURIComponent(name)}&src=trip&coordinate=wgs84&callnative=1`;
+}
+function amapNaviWebUrl(name, lat, lng) {
+  return `https://uri.amap.com/navigation?to=${lng},${lat},${encodeURIComponent(name)}&mode=car&src=trip&coordinate=wgs84&callnative=1`;
+}
+function openAmap(name, lat, lng, mode) {
+  const isNavi = mode === 'navi';
+  if ((IS_IOS || IS_ANDROID) && !IN_APP_WEBVIEW) {
+    window.location.href = isNavi ? amapNaviAppUrl(name, lat, lng) : amapAppUrl(name, lat, lng);
+    setTimeout(() => {
+      if (!document.hidden) {
+        window.location.href = isNavi ? amapNaviWebUrl(name, lat, lng) : amapWebUrl(name, lat, lng);
+      }
+    }, 1200);
+    return;
+  }
+  window.open(isNavi ? amapNaviWebUrl(name, lat, lng) : amapWebUrl(name, lat, lng), '_blank');
+}
+
+function openAS(name, lat, lng, gmap) {
+  const q = gmap || encodeURIComponent(name);
+  const encName = encodeURIComponent(name);
+  const safeName = name.replace(/'/g, "\\'");
+  const appleUrl = IN_APP_WEBVIEW
+    ? `https://maps.apple.com/?q=${lat},${lng}&ll=${lat},${lng}&name=${encName}`
+    : `maps://maps.apple.com/?q=${lat},${lng}&name=${encName}`;
+  const googleUrl = `https://www.google.com/maps/search/?api=1&query=${q}`;
+  document.getElementById('as-opts').innerHTML =
+    `<button type="button" class="as-item" onclick="openAmap('${safeName}',${lat},${lng},'navi');closeAS()">🚗 高德地图 App（一键路线导航）</button>` +
+    `<button type="button" class="as-item" onclick="openAmap('${safeName}',${lat},${lng},'marker');closeAS()">🧭 高德地图 App（查看标点位置）</button>` +
+    `<button type="button" class="as-item" onclick="window.open('${appleUrl}','_blank');closeAS()">🍎 Apple 地图</button>` +
+    `<button type="button" class="as-item" onclick="window.open('${googleUrl}','_blank');closeAS()">🗺️ Google Maps</button>`;
+  asOverlay.classList.add('show');
+}
+function closeAS() { asOverlay.classList.remove('show'); }
+</script>
+</body>
+</html>
