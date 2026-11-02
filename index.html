@@ -4,15 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>河南五城深度参考行程地图 · 郑州/宝泉/登封/洛阳/开封</title>
-<meta name="description" content="11.3–11.7（可选延至11.8）河南五城自驾+高铁串联参考行程地图：二七塔、河南博物院、1952油化厂、宝泉崖天下+大峡谷、嵩山少林寺、白马寺、龙门石窟亮灯、应天门、万岁山打铁花">
+<meta name="description" content="11.3–11.7 河南五城自驾+高铁参考行程地图（含车票D230/D232、四晚酒店、少林/宝泉/龙门/万岁山一篇秒懂导览图与高德一键导航）">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-/* ═══════════════════════════════════════════
-   Design System — Apple HIG Frosted Glass
-   ═══════════════════════════════════════════ */
 :root {
   --bg-primary:    #ffffff;
   --bg-secondary:  #f5f5f7;
@@ -56,7 +53,7 @@ a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 /* ── Map ── */
-#map { width: 100%; height: 40vh; min-height: 280px; position: sticky; top: 0; z-index: 100; }
+#map { width: 100%; height: 39vh; min-height: 265px; position: sticky; top: 0; z-index: 100; }
 .locate-btn {
   width: 36px; height: 36px; border-radius: 8px;
   background: rgba(255,255,255,.92); backdrop-filter: blur(8px);
@@ -65,6 +62,14 @@ a:hover { text-decoration: underline; }
   font-size: 18px; cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
 .locate-btn.active { color: #007aff; }
+.basemap-btn {
+  padding: 6px 11px; border-radius: 8px;
+  background: rgba(255,255,255,.92); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: .5px solid var(--separator); box-shadow: 0 1px 4px rgba(0,0,0,.18);
+  font-size: 12px; font-weight: 600; color: var(--text-primary);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.basemap-btn:active { transform: scale(.96); }
 @keyframes loc-pulse {
   0%   { transform: scale(1); opacity: .55; }
   100% { transform: scale(2.4); opacity: 0; }
@@ -77,50 +82,50 @@ a:hover { text-decoration: underline; }
 
 /* ── Tabs ── */
 .tabs {
-  display: flex; gap: 6px; padding: 12px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch;
-  background: rgba(255,255,255,.85); -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px); position: sticky; top: 40vh; z-index: 99;
+  display: flex; gap: 6px; padding: 11px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  background: rgba(255,255,255,.88); -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px); position: sticky; top: 39vh; z-index: 99;
   border-bottom: .5px solid var(--separator); scrollbar-width: none;
 }
 .tabs::-webkit-scrollbar { display: none; }
 .tab {
   flex-shrink: 0; padding: 7px 16px; border-radius: 980px; border: none;
   background: var(--bg-grouped); color: var(--text-secondary);
-  font-size: 14px; font-weight: 500; cursor: pointer; transition: all .25s ease;
+  font-size: 14px; font-weight: 600; cursor: pointer; transition: all .25s ease;
   white-space: nowrap; letter-spacing: -0.01em;
 }
 .tab:active { transform: scale(.96); }
 .tab.active { background: var(--accent); color: #fff; }
 
 /* ── Main content ── */
-.content { max-width: 680px; margin: 0 auto; padding: 16px 16px calc(24px + var(--safe-bottom)); }
+.content { max-width: 680px; margin: 0 auto; padding: 14px 16px calc(28px + var(--safe-bottom)); }
 
 /* ── Overview ── */
-.hero { text-align: center; padding: 24px 16px 18px; }
-.hero h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
-.hero .subtitle { font-size: 15px; color: var(--text-secondary); margin-top: 6px; font-weight: 400; }
+.hero { text-align: center; padding: 20px 12px 16px; }
+.hero h1 { font-size: 25px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
+.hero .subtitle { font-size: 14px; color: var(--text-secondary); margin-top: 6px; font-weight: 400; }
 
-.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
-.info-card { background: var(--bg-elevated); border-radius: var(--radius-lg); padding: 14px 16px; box-shadow: var(--shadow-sm); }
-.info-card .label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .02em; margin-bottom: 5px; }
-.info-card .value { font-size: 14px; font-weight: 600; line-height: 1.45; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.info-card { background: var(--bg-elevated); border-radius: var(--radius-lg); padding: 13px 15px; box-shadow: var(--shadow-sm); }
+.info-card .label { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .02em; margin-bottom: 4px; }
+.info-card .value { font-size: 13.5px; font-weight: 600; line-height: 1.45; }
 
 /* ── Section headers ── */
-.section-head { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .03em; padding: 18px 0 8px; }
+.section-head { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .03em; padding: 16px 0 8px; }
 
 /* ── Day header ── */
-.day-head { padding: 16px 0 12px; }
-.day-head h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
-.day-head p { font-size: 14px; color: var(--text-secondary); margin-top: 3px; }
+.day-head { padding: 14px 0 10px; }
+.day-head h2 { font-size: 21px; font-weight: 700; letter-spacing: -0.02em; }
+.day-head p { font-size: 13.5px; color: var(--text-secondary); margin-top: 3px; }
 
 /* ── Route bar ── */
-.route-bar { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 14px; box-shadow: var(--shadow-sm); font-size: 13px; color: var(--text-secondary); line-height: 1.7; white-space: pre-line; }
+.route-bar { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 14px; box-shadow: var(--shadow-sm); font-size: 13px; color: var(--text-secondary); line-height: 1.68; white-space: pre-line; border-left: 3.5px solid var(--accent); }
 .route-bar strong { color: var(--text-primary); }
 
 /* ── Timeline ── */
 .timeline { position: relative; padding-left: 24px; }
 .timeline::before { content: ''; position: absolute; left: 7px; top: 20px; bottom: 20px; width: 1.5px; background: var(--separator); }
-.tl-item { position: relative; margin-bottom: 10px; }
+.tl-item { position: relative; margin-bottom: 11px; }
 .tl-dot { position: absolute; left: -20px; top: 18px; width: 10px; height: 10px; border-radius: 50%; z-index: 1; box-shadow: 0 0 0 3px var(--bg-secondary); }
 .tl-dot.food    { background: var(--tint-red); }
 .tl-dot.spot    { background: var(--tint-blue); }
@@ -132,7 +137,7 @@ a:hover { text-decoration: underline; }
 .card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm); transition: box-shadow .25s ease; cursor: pointer; }
 .card:active { box-shadow: var(--shadow-md); }
 .card .time { font-size: 12px; font-weight: 600; color: var(--text-tertiary); letter-spacing: .01em; }
-.card .name { font-size: 17px; font-weight: 600; margin: 2px 0 4px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.card .name { font-size: 16.5px; font-weight: 600; margin: 2px 0 4px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .card .desc { font-size: 14px; color: var(--text-secondary); line-height: 1.48; }
 
 /* Badge */
@@ -140,7 +145,7 @@ a:hover { text-decoration: underline; }
 .badge.food   { background: rgba(255,59,48,.1);  color: var(--tint-red); }
 .badge.spot   { background: rgba(0,122,255,.1);  color: var(--tint-blue); }
 .badge.drink  { background: rgba(175,82,222,.1); color: var(--tint-purple); }
-.badge.hotel  { background: rgba(255,149,0,.12); color: var(--tint-orange); }
+.badge.hotel  { background: rgba(255,149,0,.14); color: #d97706; }
 .badge.transport { background: rgba(142,142,147,.15); color: var(--text-secondary); }
 
 /* Budget */
@@ -157,7 +162,7 @@ a:hover { text-decoration: underline; }
 .links { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
 .btn {
   display: inline-flex; align-items: center; gap: 4px;
-  padding: 8px 14px; border-radius: var(--radius-sm);
+  padding: 8px 13px; border-radius: var(--radius-sm);
   font-size: 13px; font-weight: 600; border: none; cursor: pointer;
   text-decoration: none !important; transition: filter .2s;
 }
@@ -166,6 +171,96 @@ a:hover { text-decoration: underline; }
 .btn.xhs    { background: #ff2442; color: #fff; }
 .btn.dp     { background: #ffa700; color: #fff; }
 .btn.rsv    { background: var(--tint-green); color: #fff; }
+
+/* ── Visual "一篇秒懂" Guide Map Cards (Fig 1 Style) ── */
+.guide-map-box {
+  margin-top: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(107, 131, 104, .28);
+  background: #f7f3e8;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+.guide-map-header {
+  background: #6b8368;
+  color: #ffffff;
+  text-align: center;
+  padding: 8px 12px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.guide-map-header .zoom-hint {
+  font-size: 11px;
+  font-weight: 500;
+  background: rgba(255,255,255,.2);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+.guide-map-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: zoom-in;
+}
+.guide-map-svg-wrap {
+  width: 100%;
+  background: #f7f3e8;
+  padding: 6px 6px 2px;
+}
+.guide-map-svg-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.guide-map-strategies {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 8px 10px 10px;
+  background: #f7f3e8;
+}
+@media (max-width: 480px) {
+  .guide-map-strategies { grid-template-columns: 1fr; }
+}
+.guide-strat-card {
+  background: #b7c6b1;
+  color: #1f291e;
+  border-radius: 10px;
+  padding: 9px 11px;
+  font-size: 12.2px;
+  line-height: 1.52;
+}
+.guide-strat-card.highlight {
+  background: #9fb896;
+  border: 1.5px solid #4e6b48;
+}
+.guide-strat-card h5 {
+  font-size: 13.5px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  color: #141c13;
+}
+
+/* Lightbox Modal for full-screen guide maps */
+.lightbox-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(0,0,0,.86); backdrop-filter: blur(6px);
+  display: none; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.lightbox-overlay.show { display: flex; }
+.lightbox-overlay img {
+  max-width: 100%; max-height: 90vh; border-radius: 12px; object-fit: contain;
+}
+.lightbox-close {
+  position: absolute; top: 18px; right: 18px;
+  background: rgba(255,255,255,.2); color: #fff; border: none;
+  width: 38px; height: 38px; border-radius: 50%; font-size: 20px; cursor: pointer;
+}
 
 /* Action Sheet */
 .as-overlay {
@@ -182,12 +277,12 @@ a:hover { text-decoration: underline; }
 }
 .as-overlay.show .as-sheet { transform: translateY(0); }
 .as-group {
-  background: rgba(255,255,255,.88); backdrop-filter: blur(20px);
+  background: rgba(255,255,255,.92); backdrop-filter: blur(20px);
   border-radius: 14px; overflow: hidden; margin-bottom: 8px;
 }
 .as-group .as-item {
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 16px; font-size: 18px; color: #007aff; font-weight: 500;
+  padding: 15px; font-size: 17px; color: #007aff; font-weight: 500;
   border: none; background: none; width: 100%; cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -236,629 +331,672 @@ a:hover { text-decoration: underline; }
 <div class="tabs" id="tabs"></div>
 <div class="content" id="content"></div>
 
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+  <button type="button" class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="景区导览图">
+</div>
+
 <script>
+const SHAOLIN_IMG_B64 = "data:image/jpeg;base64,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";
+
 // ╔══════════════════════════════════════════════════════════════╗
-// ║  Hotel & Multi-City Reference Hubs + Days Data              ║
+// ║  4幅「一篇秒懂」手绘国风景区导览图组件（同图一风格）          ║
 // ╚══════════════════════════════════════════════════════════════╝
 
-const HOTEL = { name: '河南五城落脚中心（郑州→登封→洛阳→开封）', lat: 34.7523, lng: 113.6601 };
+const VISUAL_GUIDES = {
+  baoquan: `
+  <div class="guide-map-box" onclick="event.stopPropagation()">
+    <div class="guide-map-header">
+      <span>一篇秒懂新乡宝泉（崖天下+大峡谷）</span>
+      <span class="zoom-hint">A线省力闭环</span>
+    </div>
+    <div class="guide-map-svg-wrap">
+      <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg">
+        <rect width="680" height="340" fill="#f7f3e8"/>
+        <!-- Compass N -->
+        <g transform="translate(42,46)">
+          <circle cx="0" cy="0" r="18" fill="none" stroke="#2c352b" stroke-width="1.5"/>
+          <polygon points="0,-15 -6,10 0,4 6,10" fill="#2c352b"/>
+          <text x="0" y="-21" text-anchor="middle" font-size="13" font-weight="800" fill="#2c352b">N</text>
+        </g>
+        <!-- Taihang Red Cliffs & Mountains -->
+        <path d="M70,135 L110,65 L155,135 Z" fill="#c9b89c" stroke="#6e5d4f" stroke-width="1.5"/>
+        <path d="M125,140 L175,52 L230,140 Z" fill="#bfa888" stroke="#6e5d4f" stroke-width="1.5"/>
+        <path d="M210,130 L270,45 L330,130 Z" fill="#d4a383" stroke="#7c4d3a" stroke-width="1.8"/>
+        <text x="270" y="36" text-anchor="middle" font-size="13" font-weight="800" fill="#8b3a2b">⛰️ 宝泉·崖天下（百里赤壁丹崖）</text>
+        <!-- River / Emerald Sea in Canyon -->
+        <path d="M190,260 Q320,230 430,265 T610,255" fill="none" stroke="#5aa9a0" stroke-width="18" stroke-linecap="round" opacity="0.45"/>
+        <path d="M190,260 Q320,230 430,265 T610,255" fill="none" stroke="#2a7f76" stroke-width="3" stroke-dasharray="6,4"/>
+        <text x="395" y="292" text-anchor="middle" font-size="13" font-weight="800" fill="#1e6b63">💧 宝泉大峡谷（翡翠海 · 见龙瀑 · 鱼鳞坝）</text>
+        <!-- Visitor Center Right Bottom -->
+        <rect x="525" y="160" width="118" height="44" rx="8" fill="#8c3b32" stroke="#4a1d17" stroke-width="1.5"/>
+        <text x="584" y="180" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">🏛️ 宝泉游客中心</text>
+        <text x="584" y="196" text-anchor="middle" font-size="10.5" fill="#fcedea">P 停车场 · 换乘大巴</text>
+        <!-- Cable Car Line: Visitor Center -> Luojia Rope -->
+        <line x1="535" y1="160" x2="425" y2="95" stroke="#b84a39" stroke-width="2.5" stroke-dasharray="6,4"/>
+        <rect x="440" y="102" width="88" height="24" rx="5" fill="#fff" stroke="#b84a39" stroke-width="1.2"/>
+        <text x="484" y="118" text-anchor="middle" font-size="11" font-weight="700" fill="#b84a39">🚡 洛伽寺索道8min</text>
+        <!-- Cliff Path: Dan Ya Tian Lu -> Xiangyun Platform -->
+        <path d="M415,90 Q320,75 235,92" fill="none" stroke="#a67c52" stroke-width="4"/>
+        <circle cx="415" cy="90" r="7" fill="#b84a39"/>
+        <text x="415" y="74" text-anchor="middle" font-size="12" font-weight="700" fill="#2c352b">索道上站</text>
+        <rect x="275" y="68" width="96" height="26" rx="6" fill="#e8d6b3" stroke="#6e5d4f" stroke-width="1.5"/>
+        <text x="323" y="85" text-anchor="middle" font-size="11.5" font-weight="700" fill="#3b2f26">丹崖天路·挂壁栈道</text>
+        <!-- Xiangyun Viewing Platform -->
+        <circle cx="215" cy="95" r="9" fill="#d97706" stroke="#fff" stroke-width="2"/>
+        <text x="155" y="82" text-anchor="middle" font-size="12.5" font-weight="800" fill="#b45309">☁️ 祥云观景台</text>
+        <text x="155" y="98" text-anchor="middle" font-size="10.5" fill="#5c4b3c">国家地理太行S弯机位</text>
+        <!-- L-Shaped Cave Elevator Down -->
+        <line x1="215" y1="106" x2="215" y2="235" stroke="#0071e3" stroke-width="3.5" stroke-dasharray="5,3"/>
+        <rect x="135" y="155" width="142" height="32" rx="6" fill="#0071e3"/>
+        <text x="206" y="175" text-anchor="middle" font-size="11.5" font-weight="700" fill="#fff">🛗 368m L型洞穴电梯速降</text>
+        <!-- Canyon Spots -->
+        <circle cx="220" cy="248" r="6" fill="#1e6b63"/>
+        <text x="220" y="272" text-anchor="middle" font-size="11.5" font-weight="700" fill="#2c352b">大峡谷美食街</text>
+        <circle cx="335" cy="245" r="6" fill="#1e6b63"/>
+        <text x="335" y="226" text-anchor="middle" font-size="12" font-weight="700" fill="#2c352b">🌊 见龙瀑</text>
+        <circle cx="435" cy="262" r="6" fill="#1e6b63"/>
+        <text x="435" y="242" text-anchor="middle" font-size="12" font-weight="700" fill="#2c352b">💎 翡翠海</text>
+        <circle cx="525" cy="258" r="6" fill="#1e6b63"/>
+        <text x="525" y="242" text-anchor="middle" font-size="12" font-weight="700" fill="#2c352b">鱼鳞坝</text>
+        <!-- Bus back to Visitor Center -->
+        <path d="M535,255 Q585,245 585,208" fill="none" stroke="#6b8368" stroke-width="2.5" stroke-dasharray="5,3"/>
+        <text x="615" y="238" text-anchor="middle" font-size="11" font-weight="700" fill="#4e6b48">🚌 景交返程</text>
+      </svg>
+    </div>
+    <div class="guide-map-strategies">
+      <div class="guide-strat-card highlight">
+        <h5>✅ A线·不废腿闭环（主推！）</h5>
+        游客中心乘大巴 → <strong>洛伽寺索道上山</strong> → 崖天下（丹崖天路→祥云观景台） → <strong>L型洞穴电梯下谷底</strong> → 大峡谷美食街 → 见龙瀑 → 翡翠海 → 鱼鳞坝 → 乘大巴出园（全程下坡+平路！）
+      </div>
+      <div class="guide-strat-card">
+        <h5>⚠️ B线·反向游玩对比</h5>
+        游客中心 → 先大峡谷步行进谷 → 洞穴电梯上山 → 崖天下 → 洛伽寺索道下山。虽然也可闭环，但上午大峡谷逆光且下午山顶风大，优先选A线最顺！
+      </div>
+    </div>
+  </div>`,
+
+  shaolin: `
+  <div class="guide-map-box" onclick="event.stopPropagation()">
+    <div class="guide-map-header">
+      <span>一篇秒懂嵩山少林寺（点击图片可全屏放大）</span>
+      <span class="zoom-hint">🔍 点击放大</span>
+    </div>
+    <img src="${SHAOLIN_IMG_B64}" class="guide-map-img" alt="一篇秒懂嵩山少林寺" onclick="openLightbox(SHAOLIN_IMG_B64)">
+    <div class="guide-map-strategies">
+      <div class="guide-strat-card highlight">
+        <h5>✅ 你的D3专属：不爬山精华线（3.5h）</h5>
+        08:00 少林景区门口 → 游客中心 → <strong>武术馆（看09:30/10:30少林真功表演）</strong> → 常住院（大雄宝殿/练功房脚窝） → <strong>塔林</strong> → 乘电瓶车原路返回出园（12:00前发车去白马寺！）
+      </div>
+      <div class="guide-strat-card">
+        <h5>❌ 为什么D3严禁选右边的爬山攻略？</h5>
+        少林索道+三皇寨悬空栈道往返至少需额外 3–4 小时，会直接导致下午白马寺与 <strong>16:00 龙门石窟柔光入园</strong>全部崩盘！
+      </div>
+    </div>
+  </div>`,
+
+  longmen: `
+  <div class="guide-map-box" onclick="event.stopPropagation()">
+    <div class="guide-map-header">
+      <span>一篇秒懂龙门石窟（16:00柔光+亮灯不走回头路）</span>
+      <span class="zoom-hint">U型单向闭环</span>
+    </div>
+    <div class="guide-map-svg-wrap">
+      <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg">
+        <rect width="680" height="340" fill="#f7f3e8"/>
+        <!-- Yi River in Center -->
+        <path d="M340,15 Q325,170 345,325" fill="none" stroke="#7cc2c9" stroke-width="58" opacity="0.45"/>
+        <text x="340" y="165" text-anchor="middle" font-size="14" font-weight="800" fill="#226b73" transform="rotate(-88,340,165)">🌊 伊 河 （西山石窟 与 东山礼佛台 隔河相望）</text>
+        <!-- Bridges -->
+        <rect x="292" y="42" width="96" height="18" rx="4" fill="#d4c4a8" stroke="#6e5d4f" stroke-width="1.5"/>
+        <text x="340" y="55" text-anchor="middle" font-size="11" font-weight="700" fill="#3b2f26">龙门桥（北入口）</text>
+        <rect x="292" y="268" width="96" height="20" rx="4" fill="#e09f5a" stroke="#7c4d25" stroke-width="1.5"/>
+        <text x="340" y="282" text-anchor="middle" font-size="11.5" font-weight="800" fill="#fff">🌉 漫水桥（过河）</text>
+        <!-- Northwest Service Area Top Left -->
+        <rect x="35" y="18" width="150" height="36" rx="7" fill="#6b8368"/>
+        <text x="110" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">🅿️ 西北服务区（停车/起点）</text>
+        <!-- West Hill Route (Left Side, North to South) -->
+        <path d="M185,38 L245,52 L245,275 L292,278" fill="none" stroke="#b84a39" stroke-width="3.5" stroke-dasharray="6,4"/>
+        <!-- West Hill Grotto Nodes -->
+        <circle cx="245" cy="70" r="7" fill="#b84a39"/>
+        <text x="155" y="74" text-anchor="middle" font-size="12.5" font-weight="800" fill="#b84a39">① 16:00 西山石窟检票</text>
+        <circle cx="245" cy="112" r="7" fill="#b84a39"/>
+        <text x="155" y="116" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2c352b">② 宾阳三洞（剪刀手佛）</text>
+        <circle cx="245" cy="158" r="7" fill="#b84a39"/>
+        <text x="155" y="162" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2c352b">③ 万佛洞（一万五千佛）</text>
+        <!-- Lushena Buddha Highlight -->
+        <rect x="52" y="192" width="176" height="54" rx="9" fill="#d97706" stroke="#7c2d12" stroke-width="1.8"/>
+        <text x="140" y="214" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fff">④ 奉先寺 · 卢舍那大佛</text>
+        <text x="140" y="234" text-anchor="middle" font-size="11" fill="#fffbeb">🌅 16:40夕阳柔光 + 17:40近景蹲亮灯</text>
+        <circle cx="245" cy="218" r="9" fill="#d97706" stroke="#fff" stroke-width="2"/>
+        <!-- East Hill Route (Right Side, South to North) -->
+        <path d="M388,278 L435,275 L435,60 L200,34" fill="none" stroke="#0071e3" stroke-width="3" stroke-dasharray="6,4"/>
+        <!-- Lifotai Opposite Lushena -->
+        <rect x="455" y="192" width="190" height="54" rx="9" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="1.8"/>
+        <text x="550" y="214" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fff">⑤ 礼佛台（18:00亮灯全景机位）</text>
+        <text x="550" y="234" text-anchor="middle" font-size="11" fill="#dbeafe">📸 隔河正对卢舍那大佛拍金光全景</text>
+        <circle cx="435" cy="218" r="9" fill="#1d4ed8" stroke="#fff" stroke-width="2"/>
+        <!-- Camera Sightline across river -->
+        <line x1="425" y1="218" x2="256" y2="218" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="3,3"/>
+        <text x="340" y="212" text-anchor="middle" font-size="11" font-weight="800" fill="#b45309">✨ 最佳长焦/全景视线</text>
+        <!-- East Hill Optional & Electric Cart Exit -->
+        <circle cx="435" cy="135" r="6" fill="#0071e3"/>
+        <text x="535" y="139" text-anchor="middle" font-size="12" font-weight="700" fill="#4b5563">香山寺 / 白园（夜色外观）</text>
+        <rect x="455" y="55" width="185" height="36" rx="7" fill="#4e6b48"/>
+        <text x="547" y="77" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">⑥ 礼佛台出园 · 乘¥10电瓶车回停车场</text>
+      </svg>
+    </div>
+    <div class="guide-map-strategies">
+      <div class="guide-strat-card highlight">
+        <h5>🌅 16:00 黄金柔光+亮灯时间表</h5>
+        <strong>16:00</strong> 西山石窟入园（斜阳最柔和） → 宾阳三洞 → 万佛洞 → <strong>16:50 奉先寺（卢舍那大佛）</strong>细看日景 → <strong>17:40</strong> 在奉先寺或过漫水桥到对岸<strong>礼佛台</strong>等 <strong>18:00–18:30 亮灯</strong>！
+      </div>
+      <div class="guide-strat-card">
+        <h5>🚌 出园省腿秘诀</h5>
+        在礼佛台拍完灯光下的卢舍那大佛全景后，<strong>直接从礼佛台出园</strong>，强烈建议花 ¥10 坐景区电瓶车直达西北服务区停车场取车（省下25分钟黑夜步行），19:20直奔应天门北广场！
+      </div>
+    </div>
+  </div>`,
+
+  wansuishan: `
+  <div class="guide-map-box" onclick="event.stopPropagation()">
+    <div class="guide-map-header">
+      <span>一篇秒懂万岁山武侠城（打铁花占座+北门防堵）</span>
+      <span class="zoom-hint">8~15排黄金位</span>
+    </div>
+    <div class="guide-map-svg-wrap">
+      <svg viewBox="0 0 680 350" xmlns="http://www.w3.org/2000/svg">
+        <rect width="680" height="350" fill="#f7f3e8"/>
+        <!-- North Road: Dongjing Ave -->
+        <rect x="20" y="14" width="640" height="28" rx="5" fill="#d6cfc2"/>
+        <text x="340" y="33" text-anchor="middle" font-size="12.5" font-weight="800" fill="#3b2f26">⬅️ 东京大道（散场从北门出来往东/往西走 500–800 米再打车去开封站！） ➡️</text>
+        <!-- North Gate -->
+        <rect x="285" y="42" width="110" height="28" rx="6" fill="#2e7d32"/>
+        <text x="340" y="60" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">🚪 万岁山·北门出口</text>
+        <!-- Chengzhai Shachang Arena (North Area) -->
+        <ellipse cx="340" cy="145" rx="175" ry="62" fill="#e6ccb2" stroke="#8c3b32" stroke-width="2.5"/>
+        <ellipse cx="340" cy="145" rx="125" ry="38" fill="#fdf0d5" stroke="#b45309" stroke-width="2" stroke-dasharray="5,3"/>
+        <ellipse cx="340" cy="138" rx="75" ry="20" fill="#d97706"/>
+        <text x="340" y="143" text-anchor="middle" font-size="12.5" font-weight="800" fill="#fff">🔥 北区【城寨沙场】中央舞台+水面</text>
+        <!-- Rows 1-3 Warning vs Rows 8-15 Golden -->
+        <text x="340" y="170" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">⚠️ 前1~3排：慎坐！铁屑火星易烫破羽绒服/冲锋衣</text>
+        <rect x="205" y="182" width="270" height="24" rx="6" fill="#15803d"/>
+        <text x="340" y="198" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">👑 正对舞台中央 第 8 ~ 15 排（全景+倒影+绝对安全）</text>
+        <!-- Exit Arrow to North Gate -->
+        <line x1="340" y1="83" x2="340" y2="70" stroke="#2e7d32" stroke-width="3.5"/>
+        <!-- Daytime Areas (Middle & South) -->
+        <rect x="75" y="232" width="155" height="44" rx="8" fill="#d4c4a8" stroke="#6e5d4f" stroke-width="1.5"/>
+        <text x="152" y="252" text-anchor="middle" font-size="12" font-weight="800" fill="#3b2f26">⚔️ 水浒街 · 十字坡</text>
+        <text x="152" y="268" text-anchor="middle" font-size="10.5" fill="#5c4b3c">王婆说媒 · 平价小吃 · NPC银票</text>
+        <rect x="262" y="232" width="156" height="44" rx="8" fill="#fbbf24" stroke="#b45309" stroke-width="1.8"/>
+        <text x="340" y="252" text-anchor="middle" font-size="12.5" font-weight="800" fill="#7c2d12">⏰ 14:30 / 15:00 抢号</text>
+        <text x="340" y="268" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7c2d12">入园核销后小程序免费实名约</text>
+        <rect x="450" y="232" width="155" height="44" rx="8" fill="#d4c4a8" stroke="#6e5d4f" stroke-width="1.5"/>
+        <text x="527" y="252" text-anchor="middle" font-size="12" font-weight="800" fill="#3b2f26">🚢 神舟传奇 · 攻城场</text>
+        <text x="527" y="268" text-anchor="middle" font-size="10.5" fill="#5c4b3c">三打祝家庄 · 大型实景马战</text>
+        <!-- South Gate -->
+        <rect x="260" y="300" width="160" height="32" rx="7" fill="#6b8368"/>
+        <text x="340" y="320" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">🏮 南门入口（早入园寄存行李）</text>
+      </svg>
+    </div>
+    <div class="guide-map-strategies">
+      <div class="guide-strat-card highlight">
+        <h5>🔥 免排队占座 & 防烫衣秘诀</h5>
+        1. <strong>入园后定好14:30/15:00闹钟</strong>线上免费实名预约。<br>
+        2. <strong>千万别等20:00再去排队！</strong> <strong>18:40–19:00</strong> 直接进北区【城寨沙场】落座，看完前一场马术剧（《三打祝家庄》/《神舟传奇》）<strong>原地不动连看20:10《打铁花》</strong>！<br>
+        3. <strong>选正中8~15排</strong>：避开前3排火星烫破冲锋衣/羽绒服，拍金雨倒映水面最绝！
+      </div>
+      <div class="guide-strat-card">
+        <h5>🚕 散场防堵 & 赶22:08火车指南</h5>
+        打铁花压轴散场时上万人涌向出口，门口网约车排队超1小时！<br>
+        • <strong>周六晚赶22:08 D232返杭</strong>：20:30第一场打铁花一结束，<strong>立刻从北门出园，顺东京大道往东或往西步行500~800米</strong>离开核心拥堵区再打车直奔开封站（或周五晚看完打铁花搭门口“夜市专线公交”去鼓楼广场）。
+      </div>
+    </div>
+  </div>`
+};
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  Hotels & 5-Day Confirmed Itinerary Data                     ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const HOTEL = { name: '汉庭郑州二七广场地铁站酒店（D1首晚落脚）', lat: 34.7535, lng: 113.6625 };
 
 const DAYS = [
   { id: 0, label: '总览', color: '#0071e3', locations: [] },
   {
     id: 1,
     label: 'D1 郑州',
-    date: '11月3日 周二 · 郑州人文与工业文创 + 晚间提车（帕萨特）',
-    title: 'D1 · 二七塔 · 河南博物院 · 1952油化厂',
+    date: '11月3日 周二 · D230 08:08抵郑 → 汉庭放行李 → 二七塔 → 河南博物院 → 瑞光 & 1952油化厂 → 提车帕萨特',
+    title: 'D1 · 二七塔 · 河南博物院 · 瑞光&1952油化厂',
     color: '#ff9500',
-    routeSummary: '🚗 动线：08:00 郑州站出站 → 步行10min 二七纪念塔外观 → 方中山胡辣汤早餐 → 09:15 河南博物院（9km/25min） → 葛记焖饼午餐 → 14:30 郑州记忆1952油化厂（6km/20min） → 傍晚提车帕萨特 & 住郑州市内',
+    routeSummary: '🚂 车次锚点：D230（11.2周一 21:25杭州 → 11.3周二 08:08郑州站，一等卧12车23号下铺 · 学生票务必带学生证！）\n🚗 当日动线：08:08 出站步行10min → 二七广场/汉庭郑州二七广场地铁站酒店存行李 → 方中山胡辣汤 → 09:30 河南博物院（9km/30min） → 14:30 瑞光创意工厂 & 郑州记忆1952油化厂（6km/23min） → 晚上提车（帕萨特） → 住汉庭郑州二七广场地铁站酒店',
     locations: [
       {
-        name: '郑州站（08:00 出站）',
+        name: '郑州站（D230 08:08 到站）',
         lat: 34.7466, lng: 113.6508,
         type: 'transport',
-        time: '08:00',
-        desc: '抵达郑州火车站，建议从东广场出站，直接步行10分钟直达二七广场。',
-        detail: '💡 贴士：出站后轻装步行即可到二七纪念塔；若行李较多可先寄存或打车前往酒店放行李。',
-        gmap: '郑州站+Zhengzhou+Railway+Station'
+        time: '08:08',
+        desc: 'D230次列车08:08抵达郑州站（一等卧12车23号下铺）。从东广场出站步行约10分钟直达二七广场与汉庭酒店！',
+        budget: '已购学生票 ¥344',
+        detail: '🎓 重要凭证提醒：你的往返车票均为【学生票】，请务必随身携带【学生证原件】核验乘车！而且学生证在宝泉、少林寺、白马寺、龙门石窟、开封府、大相国寺、万岁山均可享受半价优惠！',
+        gmap: '郑州火车站'
+      },
+      {
+        name: '汉庭郑州二七广场地铁站酒店（先放行李 & D1住宿）',
+        lat: 34.7535, lng: 113.6625,
+        type: 'hotel',
+        time: '08:20',
+        desc: '已订11.3–11.4（大床房1晚）。出站步行10min顺路先到前台免费寄存行李，一身轻装去逛二七塔和博物院！',
+        budget: '已预订（入住人：汪辉）',
+        detail: '🏨 动线优势：酒店紧邻二七广场地铁站，早上08:20先把双肩包/行李箱寄存在前台（若房态空也可直接提前办入住），晚上提了帕萨特回来停放也很方便。',
+        pay: { wechat: 1, alipay: 1 },
+        gmap: '汉庭郑州二七广场地铁站酒店'
       },
       {
         name: '二七广场 | 二七纪念塔',
         lat: 34.7523, lng: 113.6601,
         type: 'spot',
-        time: '08:15',
-        desc: '郑州地标双身并联塔。09:00才开馆，08:15正好在广场拍清晨无人的双塔外观，不必苦等进塔。',
-        budget: '免费（外观免预约）',
-        detail: '📌 减法建议：二七纪念塔周一闭馆、周二09:00–17:00开放。你08:00出站步行过来才08:15，把宝贵的09:00第一波入场留给河南博物院更值！',
+        time: '08:35',
+        desc: '就在酒店旁边步行3分钟！清晨广场人少好出片（塔内09:00开放，周一闭馆周二开放）。',
+        budget: '免费（凭身份证）',
+        detail: '📸 游玩建议：放完行李出来在二七广场拍双塔标志性机位，顺便在周边吃碗热乎胡辣汤，09:00后打车或坐地铁去河南博物院。',
         pay: { wechat: 1, alipay: 1 },
         xhsKeyword: '郑州二七纪念塔 拍照机位',
         reserve: 'https://zz27.com.cn/',
         gmap: '郑州二七纪念塔'
       },
       {
-        name: '方中山胡辣汤（顺河路总店）',
+        name: '方中山胡辣汤（顺河路/二七周边早餐）',
         lat: 34.7588, lng: 113.6815,
         type: 'food',
-        time: '08:35',
-        desc: '河南早餐之魂！必点“两掺”（胡辣汤+豆腐脑）配牛肉水煎包、油饼。',
+        time: '08:50',
+        desc: '河南早餐扛把子！推荐“两掺”（胡辣汤+豆腐脑）配牛肉盒、水煎包、油饼。',
         budget: '¥15–25/人',
-        detail: '🍜 大众点评信号：郑州胡辣汤头部老牌，汤底骨香浓郁、肉片实在。\n📕 小红书提醒：胡椒辣味非常猛！外地游客强烈建议点“两掺”（掺豆腐脑中和辣度），否则一早容易辣到冒汗。',
+        detail: '🍜 大众点评信号：汤底骨香浓郁、胡椒味足。\n📕 小红书提醒：不能吃太辣一定点“两掺”，中和辣度又顺滑暖胃。',
         pay: { wechat: 1, alipay: 1 },
         xhsKeyword: '郑州方中山胡辣汤 点单攻略',
         dianpingKeyword: '方中山胡辣汤 郑州',
         reserve: 'http://www.fangzhongshan.cn/',
-        gmap: '郑州方中山胡辣汤顺河路总店'
+        gmap: '方中山胡辣汤'
       },
       {
-        name: '河南博物院 ⭐重预约',
+        name: '河南博物院 ⭐重预约（距二七9km/约30min）',
         lat: 34.7876, lng: 113.6669,
         type: 'spot',
-        time: '09:15',
-        desc: '中原第一大馆（周二至周日09:00–20:30开放）。直奔贾湖骨笛、妇好鸮尊、云纹铜禁、莲鹤方壶。',
+        time: '09:30',
+        desc: '周二正常开馆（09:00–20:30）！提前5天17:00放票，必看贾湖骨笛、妇好鸮尊、云纹铜禁、莲鹤方壶。',
         budget: '免费（需提前5天17:00抢票）',
-        detail: '⏰ 抢票死命令：11月3日（周二）参观，必须在【10月29日 17:00】准时在“河南博物院”微信公众号实名预约！\n🏛️ 观展动线：09:15第一波进馆直接上4楼或从1楼按朝代看起；镇馆九大国宝集中在1–3楼展厅，文创区“考古盲盒”在1楼大厅。若没抢到免费票，可买馆内“华夏古乐团”演出票入馆（非常震撼）。',
+        detail: '🏛️ 镇馆九大件打卡顺序：\n• 1F–2F 先秦两汉：贾湖骨笛（1厅）、妇好鸮尊（2厅商代）、云纹铜禁 & 莲鹤方壶（3厅春秋）、四神云气图壁画（秦汉）。\n• 3F 隋唐宋金：武则天除罪金简、唐三彩、汝窑天蓝釉刻花鹅颈瓶。\n• 1F 文创区：考古盲盒。',
         pay: { wechat: 1, alipay: 1 },
         xhsKeyword: '河南博物院 镇馆之宝 路线',
         reserve: 'https://www.chnmus.net/',
         gmap: '河南博物院'
       },
       {
-        name: '葛记焖饼（农业路/经三路店）',
+        name: '葛记焖饼 / 合记烩面（午餐）',
         lat: 34.7852, lng: 113.6745,
         type: 'food',
-        time: '12:40',
-        desc: '非遗百年老字号，坛子肉焖饼吸满浓郁肉汁，配一碗红豆粥解腻，逛完博物院完美续命。',
-        budget: '¥35–50/人',
-        detail: '🍜 大众点评信号：离河南博物院很近，坛子肉肥而不腻，饼丝软韧入味。\n📕 小红书提醒：焖饼偏咸香口，一定要搭免费的红豆粥或点份拍黄瓜、葛记酱肉。',
+        time: '12:45',
+        desc: '逛完河博补充碳水：非遗坛子肉焖饼配红豆粥（葛记），或羊骨浓汤羊肉烩面配糖蒜（合记）。',
+        budget: '¥25–45/人',
+        detail: '🍜 大众点评信号：两家都是郑州百年老字号，出餐快，吃完打车约6km（23分钟）直奔瑞光与油化厂。',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '郑州葛记焖饼',
+        xhsKeyword: '郑州葛记焖饼 合记烩面',
         dianpingKeyword: '葛记焖饼 郑州',
         reserve: 'https://you.ctrip.com/food/157/4926576.html',
         gmap: '郑州葛记焖饼'
       },
       {
-        name: '郑州记忆·1952油化厂创意园',
-        lat: 34.7738, lng: 113.6358,
-        type: 'spot',
-        time: '14:30',
-        desc: '距博物院约6km/23min。苏式红砖老肥皂厂改造，文艺涂鸦、复古车间与傍晚亮灯市集氛围感拉满。',
-        budget: '免费开放',
-        detail: '📸 游玩重点：园区比瑞光创意工厂更大、业态更丰富。16:30后夕阳斜照红砖墙+傍晚霓虹灯牌亮起最出片，还可以在园区喝杯咖啡。',
-        pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '郑州记忆1952油化厂 拍照',
-        reserve: 'https://tw.trip.com/travel-guide/attraction/zhengzhou/zhengzhou-memory-1952-creative-park-154219034/',
-        gmap: '郑州记忆油化厂创意园'
-      },
-      {
-        name: '提车点（大众帕萨特）& 郑州市内酒店',
-        lat: 34.7610, lng: 113.6580,
-        type: 'hotel',
-        time: '18:30',
-        desc: '晚间提租车（帕萨特），检查轮胎/灯光/ETC及洛阳异地还车门店位置，住金水区或二七区酒店。',
-        budget: '租车约 ¥220–300/天',
-        detail: '🚗 自驾提醒：提车时拍一圈外观视频留底；酒店建议选带免费停车场的门店，方便次日一早7:30直接上连霍高速/郑云高速奔赴宝泉。',
-        pay: { wechat: 1, alipay: 1, card: 1 },
-        gmap: '郑州市金水区'
-      },
-      {
-        name: '健康路夜市 / 阿五黄河大鲤鱼（晚餐）',
-        lat: 34.7645, lng: 113.6542,
-        type: 'food',
-        time: '19:30',
-        desc: '离油化厂与金水区中心很近：想逛吃选健康路夜市，想坐下吃地道豫菜选阿五黄河大鲤鱼。',
-        budget: '¥30–90/人',
-        detail: '🍜 大众点评信号：健康路是郑州最火的本地夜市（19:00后出摊）；阿五红烧黄河鲤鱼鱼肉紧实无腥味，适合拿汤汁拌米饭。',
-        pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '郑州健康路夜市 必吃',
-        dianpingKeyword: '健康路夜市 郑州',
-        gmap: '郑州健康路夜市'
-      },
-      {
-        name: '瑞光创意工厂（同质化备选/可略过）',
+        name: '瑞光创意工厂（距河博约6km/23min）',
         lat: 34.7695, lng: 113.6422,
         type: 'spot',
-        time: '—',
-        desc: '老印刷厂改造文创园，距油化厂仅1.5km。与油化厂风格重叠度高，体力充沛可顺路快拍30分钟。',
-        budget: '免费',
-        detail: '✂️ 减法理由：瑞光体量较小，以“郑州”大字涂鸦墙拍照为主。如果更喜欢逛市集和拍复古工业风，把时间全留给1952油化厂更轻松。',
-        xhsKeyword: '郑州瑞光创意工厂',
+        time: '14:30',
+        desc: '1983年老印刷厂改造文创园，打卡“郑州”红墙大字涂鸦、复古楼梯与文艺书店/咖啡馆。',
+        budget: '免费开放',
+        detail: '📸 双园串联法：瑞光创意工厂和郑州记忆1952油化厂相距仅约1.5km！建议14:30先在瑞光逛拍45–60分钟，15:40转场去体量更大、夜景更绝的1952油化厂待到亮灯！',
+        pay: { wechat: 1, alipay: 1 },
+        xhsKeyword: '郑州瑞光创意工厂 拍照机位',
         reserve: 'https://gs.ctrip.com/html5/you/sight/zhengzhou157/5099476.html',
         gmap: '郑州瑞光创意工厂'
       },
       {
-        name: '合记烩面（人民路总店 · 午餐备选）',
-        lat: 34.7562, lng: 113.6658,
-        type: 'food',
-        time: '—',
-        desc: '中华老字号河南羊肉烩面代表，汤浓肉烂，配糖蒜与辣椒油极香。',
-        budget: '¥25–40/人',
-        detail: '🍜 大众点评信号：一楼快餐大碗烩面性价比最高，优质羊肉烩面¥22左右吃到饱。',
+        name: '郑州记忆·1952油化厂创意园',
+        lat: 34.7738, lng: 113.6358,
+        type: 'spot',
+        time: '15:45',
+        desc: '苏式红砖老肥皂厂改造，保留巨大储油罐与复古车间，傍晚华灯初上时街头演艺与文创市集氛围拉满！',
+        budget: '免费开放',
+        detail: '🌆 黄金时段：16:00–18:30 从下午斜阳拍到傍晚霓虹亮灯，园区内就有丰富餐饮小吃，也可顺路逛旁边的健康路夜市。',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '郑州合记烩面 人民路',
-        dianpingKeyword: '合记烩面 人民路店',
-        reserve: 'https://hk.trip.com/moments/theme/poi-heji-10561123-guides-993135/',
-        gmap: '郑州合记烩面人民路店'
+        xhsKeyword: '郑州记忆1952油化厂 夜景',
+        reserve: 'https://tw.trip.com/travel-guide/attraction/zhengzhou/zhengzhou-memory-1952-creative-park-154219034/',
+        gmap: '郑州记忆1952油化厂创意园'
+      },
+      {
+        name: '提租车（大众帕萨特）& 返回汉庭二七广场酒店',
+        lat: 34.7535, lng: 113.6625,
+        type: 'hotel',
+        time: '19:30',
+        desc: '晚间提取租车（帕萨特），检查车况、ETC与洛阳异地还车点，开车回汉庭郑州二七广场地铁站酒店休息。',
+        budget: '租车帕萨特 D1晚–D3晚（48h）',
+        detail: '🚗 提车提示：提车时绕车拍一圈视频留存，确认油量/满油还车规则；定好次日早上闹钟直接从酒店出发上高速去宝泉。',
+        pay: { wechat: 1, alipay: 1, card: 1 },
+        gmap: '汉庭郑州二七广场地铁站酒店'
       }
     ]
   },
   {
     id: 2,
     label: 'D2 宝泉·登封',
-    date: '11月4日 周三 · 自驾宝泉（崖天下+大峡谷A线闭环）→ 晚宿登封',
-    title: 'D2 · 宝泉崖天下+大峡谷 · 夜宿登封',
+    date: '11月4日 周三 · 酒店早发宝泉（100km/1.5h）→ 大峡谷+崖天下闭环 → 赴登封住宿（165km/2.5h）',
+    title: 'D2 · 宝泉崖天下+大峡谷闭环 · 宿登封',
     color: '#34c759',
-    routeSummary: '🚗 动线：07:30 郑州出发（100km/1.5h） → 09:00 宝泉游客中心 → 洛伽寺索道上崖天下 → 祥云观景台 → L型洞穴电梯下大峡谷 → 翡翠海/见龙瀑 → 16:00 驱车赴登封（165km/2.5h） → 住登封',
+    routeSummary: '🚗 当日动线：07:30 汉庭郑州二七广场地铁站酒店出发（100km/1.5h） → 09:00 河南宝泉旅游区（崖天下+大峡谷A线省力闭环） → 16:00 驱车赴登封（165km/2.5h） → 18:30 入住汉庭郑州登封嵩阳书院酒店',
     locations: [
       {
-        name: '河南宝泉旅游区 · 崖天下（洛伽寺索道上站）',
+        name: '河南宝泉旅游区（大峡谷+崖天下闭环路线）',
         lat: 35.4852, lng: 113.4385,
         type: 'spot',
         time: '09:00',
-        desc: '郑州自驾100km约1.5h抵达。买“崖天下+大峡谷”双园联票，走A线先乘洛伽寺索道上山，全程下坡不费腿！',
-        budget: '双园联票约 ¥190–230（含景交/索道/电梯）',
-        detail: '🗺️ 黄金闭环路线（A线省力版）：\n1. 游客中心乘免费景交大巴（10min）→ 乘可容纳200人的【洛伽寺索道】（8min上崖天下）。\n2. 走【丹崖天路】绝壁栈道 → 打卡300米高空【祥云观景台】（俯瞰宝泉湖太行大峡谷S弯国家地理机位）。\n3. 步行/乘观光车至【368米L型洞穴电梯】直接下山进入大峡谷！\n⚠️ 天气提醒：纯户外高空峡谷，11月太行山顶风凉，备防风外套。',
+        desc: '从郑州酒店自驾100km约1.5h即达。下方已为你生成《一篇秒懂宝泉闭环导览图》，走A线先索道上崖天下、再乘L型电梯下大峡谷最省力！',
+        budget: '双园联票（凭证件/学生证享优惠）',
+        detail: '🗺️ 闭环实操：游客中心乘景交车10min → 乘【洛伽寺索道】8min直达崖天下山顶 → 走丹崖天路、祥云观景台（拍太行山S大拐弯） → 乘【368米高L型洞穴电梯】直降大峡谷谷底 → 逛大峡谷美食街、见龙瀑、翡翠海、鱼鳞坝 → 乘大巴回游客中心取帕萨特。',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '新乡宝泉崖天下大峡谷 不废腿路线',
+        guideKey: 'baoquan',
+        xhsKeyword: '新乡宝泉崖天下大峡谷 闭环路线',
         reserve: 'https://www.baoquanlvyou.com/jingqugaikuang.html',
-        gmap: '新乡宝泉旅游区'
+        gmap: '河南宝泉旅游区'
       },
       {
-        name: '宝泉大峡谷美食街（中段能量补给）',
+        name: '宝泉大峡谷美食街（谷底午餐补给）',
         lat: 35.4905, lng: 113.4412,
         type: 'food',
         time: '12:15',
-        desc: '从L型洞穴电梯出来即达大峡谷核心餐饮区，热乎饸饹面、凉皮、烤肠快速补充体力。',
+        desc: '从L型洞穴电梯下到大峡谷出口即是美食街，热汤面、凉皮、烤肠快速补给能量。',
         budget: '¥25–45/人',
-        detail: '🍜 补给建议：景区内没有大桌正餐必要，在峡谷美食街吃碗热汤面+自带巧克力和保温杯热水最实用。',
         pay: { wechat: 1, alipay: 1 },
         dianpingKeyword: '宝泉大峡谷 美食',
-        gmap: '宝泉大峡谷景区'
-      },
-      {
-        name: '宝泉大峡谷（见龙瀑 · 翡翠海 · 鱼鳞坝）',
-        lat: 35.4920, lng: 113.4430,
-        type: 'spot',
-        time: '13:00',
-        desc: '被誉为“中原小九寨”，碧绿潭水配赤色太行丹霞岩壁，沿亲水步道一路平缓往外走。',
-        budget: '含在双园联票内',
-        detail: '📸 必拍点：见龙瀑高空飞瀑、翡翠海玻璃水、游龙湾与鱼鳞坝。15:30前乘出园大巴回到游客中心取车，避免天黑走山路。',
-        pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '宝泉大峡谷 翡翠海 拍照',
-        reserve: 'https://www.baoquanlvyou.com/yatianxia.html',
         gmap: '宝泉大峡谷'
       },
       {
-        name: '自驾跨城：宝泉 → 登封市区（165km / 2.5h）',
+        name: '自驾跨城：宝泉 → 登封（165km / 2.5h）',
         lat: 34.8500, lng: 113.2500,
         type: 'transport',
         time: '16:00',
-        desc: '走郑云高速过黄河大桥转郑州绕城、郑少洛高速直达登封，全程高速路况极佳。',
-        detail: '🚗 驾驶提示：16:00前从宝泉发车，18:30左右抵达登封市区，刚好避开夜间疲劳驾驶。',
+        desc: '下午16:00前从宝泉停车场发车，走郑云高速过黄河转郑少洛高速直奔登封。',
+        detail: '🚗 驾驶贴士：帕萨特高速巡航非常稳，中途可在服务区休息10分钟，约18:30抵达登封市区酒店。',
         gmap: '登封市'
       },
       {
-        name: '嵩小满·山野食记 / 登封焦盖烧饼烩羊肉',
+        name: '汉庭郑州登封嵩阳书院酒店（D2住宿）',
+        lat: 34.4785, lng: 113.0358,
+        type: 'hotel',
+        time: '18:30',
+        desc: '已订11.4–11.5（舒压大床房1晚，入住人：汪辉）。位于登封嵩阳书院片区，去次日少林寺仅约20分钟车程！',
+        budget: '已预订（舒压大床房）',
+        detail: '🏨 周边便利度：酒店就在嵩山脚下登封城区北侧，周边餐饮密集，停车方便。',
+        pay: { wechat: 1, alipay: 1 },
+        gmap: '汉庭郑州登封嵩阳书院酒店'
+      },
+      {
+        name: '嵩小满·山野食记 / 登封焦盖烧饼烩羊肉（晚餐）',
         lat: 34.4535, lng: 113.0352,
         type: 'food',
-        time: '18:45',
-        desc: '登封口碑山野豫菜与非遗名吃：芝麻焦盖烧饼夹焖羊肉、嵩山笨鸡煲、芥菜扣肉。',
-        budget: '¥45–75/人',
-        detail: '🍜 大众点评信号：登封必吃焦盖烧饼（外酥掉渣）配热腾腾的羊肉汤或山野土菜，爬山后极度治愈。',
+        time: '19:15',
+        desc: '登封地道风味：芝麻焦盖烧饼夹焖羊肉、嵩山笨鸡煲、登封刀削面，跑完太行山吃顿热乎硬菜。',
+        budget: '¥40–70/人',
         pay: { wechat: 1, alipay: 1 },
         xhsKeyword: '登封美食 焦盖烧饼 嵩小满',
         dianpingKeyword: '嵩小满山野食记 登封',
         reserve: 'https://www.wingontravel.com/discovery/restaurant-154855269',
-        gmap: '登封市少林大道'
-      },
-      {
-        name: '登封市区/少林大道酒店（宿登封）',
-        lat: 34.4550, lng: 113.0380,
-        type: 'hotel',
-        time: '20:15',
-        desc: '入住登封市区或少林景区门口酒店（距少林寺游客中心约15–20分钟车程），早点休息蓄力Day 3。',
-        budget: '¥200–350/晚',
-        detail: '🏨 选址建议：住登封市区（守敬路/少林大道）吃饭买补给最方便，次日一早开车15分钟即达少林寺停车场。',
-        pay: { wechat: 1, alipay: 1, card: 1 },
-        gmap: '登封市'
+        gmap: '登封嵩小满山野食记'
       }
     ]
   },
   {
     id: 3,
     label: 'D3 少林·洛阳',
-    date: '11月5日 周四 · 少林寺 → 白马寺 → 16:00龙门石窟亮灯 → 应天门夜景还车',
-    title: 'D3 · 少林功夫 · 白马寺 · 龙门夜游 · 应天门',
+    date: '11月5日 周四 · 嵩山少林寺 → 白马寺（65km/1h）→ 16:00龙门石窟亮灯（29km/1h）→ 应天门夜景还车宿星程',
+    title: 'D3 · 少林寺 · 白马寺 · 龙门亮灯 · 应天门',
     color: '#af52de',
-    routeSummary: '🚗 动线：08:00 嵩山少林寺精华线（砍三皇寨！） → 12:30 驱车赴白马寺（65km/1h） → 15:00 赴龙门石窟（29km/50min） → 16:00 西山石窟入园 → 18:00 礼佛台看亮灯 → 19:20 应天门北广场+丽景门水席 → 洛阳还车住宿',
+    routeSummary: '🚗 当日动线：08:00 嵩山少林寺（按图一“不爬山攻略”走精华线） → 12:30 自驾赴白马寺（65km/1h） → 15:00 自驾赴龙门石窟（29km/1h） → 16:00 西山石窟入园 → 17:40 礼佛台等亮灯 → 19:20 应天门北广场夜景 + 丽景门/洛邑古城 → 还车 & 入住星程洛阳应天门周王城广场酒店',
     locations: [
       {
-        name: '嵩山少林寺（常住院 + 武术馆 + 塔林）',
+        name: '嵩山少林寺 ⭐内嵌图一《一篇秒懂嵩山少林寺》',
         lat: 34.5072, lng: 112.9355,
         type: 'spot',
         time: '08:00',
-        desc: '禅宗祖庭、天下第一名刹。只走核心精华线（3.5h），严禁爬三皇寨，确保12:00前出园！',
-        budget: '门票 ¥80（含少林武术馆功夫表演）',
-        detail: '🥋 核心动线：\n1. 08:00入园步行700米先看【少林寺武术馆】真功表演（每场30分钟，提前20分钟进场占座）。\n2. 游览【常住院】：山门→天王殿→大雄宝殿→藏经阁→方丈室→立雪亭→千佛殿（看武僧练功踩出的48个脚窝）。\n3. 步行至【塔林】（中国最大古塔群），随后乘单程电瓶车（¥15）快速返程取车。\n✂️ 铁律：千万别上三皇寨索道，否则下午赶不上16:00的龙门石窟柔光时段！',
+        desc: '从汉庭登封嵩阳书院酒店开车20min即达。直接照着下方你发的【图一：不爬山攻略】走：游客中心→武术馆→常住院→塔林→原路返回！',
+        budget: '门票 ¥80（学生证半价¥40，含武术馆表演）',
+        detail: '🥋 完美契合图一【不爬山攻略】：\n• 路线：少林景区入口 → 游客服务中心 → 石牌坊 → 【武术馆】（看30min少林功夫表演） → 【常住院】（少林寺山门/大雄宝殿/立雪亭） → 【塔林】 → 原路返回出园。\n• 时间控制：12:00前出景区吃简餐，12:30准时发车去洛阳白马寺。',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '嵩山少林寺 半日游 不爬山路线',
+        guideKey: 'shaolin',
+        xhsKeyword: '嵩山少林寺 不爬山攻略 武术表演时间',
         reserve: 'https://homegroundchina.com/zh/guides/shaolin-temple/',
         gmap: '嵩山少林寺'
       },
       {
-        name: '永泰寺素食馆 / 少林景区简餐（快速午餐）',
+        name: '永泰寺素食馆 / 少林出口简餐（快速午餐）',
         lat: 34.5120, lng: 112.9420,
         type: 'food',
         time: '11:45',
-        desc: '出园前后快速吃一顿少林素斋或简餐面食，12:30准时发车上高速奔赴洛阳白马寺。',
-        budget: '¥35–60/人',
-        detail: '🍜 节奏提示：今天下午有严格的“16:00龙门入园”时间锚点，午餐控制在40分钟内。',
+        desc: '少林景区周边快速用午餐，12:30准时上高速赴洛阳白马寺（65km约1小时）。',
+        budget: '¥30–55/人',
         pay: { wechat: 1, alipay: 1 },
         dianpingKeyword: '少林寺 素斋',
         reserve: 'https://gs.ctrip.com/html5/you/foods/fooddetail/178/167780.html',
-        gmap: '少林寺永泰寺素斋'
+        gmap: '少林寺'
       },
       {
-        name: '洛阳白马寺（中国第一古刹 + 四国佛殿）',
+        name: '洛阳白马寺（距少林65km/约1h）',
         lat: 34.7218, lng: 112.6056,
         type: 'spot',
         time: '13:30',
-        desc: '距少林寺65km（高速约1h）。一次看齐中式古刹与印、缅、泰三国风格佛殿建筑群。',
-        budget: '门票 ¥35',
-        detail: '🏛️ 高效游览（1.5h）：先走古建中轴线（天王殿→大佛殿→大雄殿→接引殿→清凉台），再拐去西侧【国际佛殿苑】（泰国殿金碧辉煌、缅甸大金塔、印度桑奇大塔同款），15:00准时取车去龙门石窟。',
+        desc: '中国第一古刹！逛中式古建本院 + 印、缅、泰三国风格国际佛殿苑，15:00发车去龙门石窟。',
+        budget: '门票 ¥35（学生证半价¥17.5）',
+        detail: '🏛️ 游览重点（1.5h）：天王殿→大佛殿→清凉台→西侧泰国金殿、缅甸大金塔、印度大塔，拍照非常出片；15:00准时出发前往龙门石窟（29km约45–60min）。',
         pay: { wechat: 1, alipay: 1 },
         xhsKeyword: '洛阳白马寺 拍照机位 路线',
         reserve: 'https://gs.ctrip.com/html5/you/sight/luoyang198/8940.html',
         gmap: '洛阳白马寺'
       },
       {
-        name: '龙门石窟 ⭐黄金柔光+亮灯连看',
+        name: '龙门石窟 ⭐16:00柔光入园+18:00亮灯导览图',
         lat: 34.5558, lng: 112.4705,
         type: 'spot',
         time: '16:00',
-        desc: '16:00从西山石窟入园追夕阳柔光，17:40在奉先寺或过漫水桥到礼佛台蹲守18:00–18:30亮灯！',
-        budget: '门票 ¥90（实名分时预约）',
-        detail: '✨ 完美摄影时刻表（按你的方案精校）：\n1. 15:50 停好车在【西北服务区】，乘电瓶车或步行至检票口。\n2. 16:00 进【西山石窟】：此时夕阳斜射，依次细看【宾阳三洞】（剪刀手佛与微笑佛）、【万佛洞】、直达核心【奉先寺（卢舍那大佛）】。\n3. 17:40 在奉先寺正面看完近景亮灯，或过【漫水桥】到伊河对岸【礼佛台】架机位。\n4. 18:00–18:30 全园亮灯！在礼佛台拍完灯光倒映伊河的卢舍那大佛远景后，直接从礼佛台乘电瓶车回西北服务区取车（不走回头路）。',
+        desc: '16:00从西山石窟入园（阳光柔和），重点看宾阳三洞、万佛洞、卢舍那大佛（奉先寺）；17:40在奉先寺或过漫水桥到对岸礼佛台等18:00–18:30亮灯！',
+        budget: '门票 ¥90（学生证半价¥45，实名预约）',
+        detail: '✨ 下方已配备《一篇秒懂龙门石窟导览图》，直观展示【西北服务区 → 西山石窟 → 漫水桥 → 礼佛台】单向U型闭环，拍完灯光下的卢舍那大佛后直接从礼佛台出园！',
         pay: { wechat: 1, alipay: 1 },
+        guideKey: 'longmen',
         xhsKeyword: '龙门石窟 亮灯时间 礼佛台 机位',
         reserve: 'https://gs.ctrip.com/html5/you/sight/luoyang198/8865.html',
         gmap: '洛阳龙门石窟'
       },
       {
-        name: '隋唐洛阳城应天门遗址（北广场免费夜景）',
+        name: '应天门遗址北广场（距龙门约15km/35min）',
         lat: 34.6775, lng: 112.4582,
         type: 'spot',
-        time: '19:30',
-        desc: '距龙门石窟约15km/35min。亮灯18:00–22:30，不用买票登楼，直接在北广场免费拍盛唐城门大片！',
-        budget: '外广场免费（登楼¥60不必买）',
-        detail: '⚠️ 重要情报核实：应天门北广场的【20:00/20:30 3D激光投影秀】仅在周末（周五/六/日）及法定节假日常态播放；11月5日是【周四】，当晚有绝美建筑亮灯但通常无3D激光秀（若想看激光秀可参考D6延展方案周五晚留洛阳）。',
+        time: '19:25',
+        desc: '亮灯时间18:00–22:30！建议不用买票登楼，直接在北广场免费拍盛唐城门夜景大片！',
+        budget: '北广场免费拍夜景',
+        detail: '💡 贴士：应天门距你的酒店（星程洛阳应天门周王城广场酒店）非常近！注意20:00/20:30的3D激光投影秀逢周末或节假日常态播放（11.5周四晚以常规璀璨建筑亮灯为主）。',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '洛阳应天门 北广场 免费机位',
+        xhsKeyword: '洛阳应天门 北广场 免费夜景机位',
         reserve: 'http://m.xinhuanet.com/ha/2019-10/16/c_1125111326.htm',
         gmap: '洛阳应天门遗址博物馆'
       },
       {
-        name: '洛阳市内还车点 & 老城区酒店',
-        lat: 34.6768, lng: 112.4620,
-        type: 'hotel',
-        time: '20:00',
-        desc: '在老城区/西工区或指定网点归还帕萨特，随后无车一身轻，步行开启老城夜游与美食。',
-        budget: '住宿约 ¥220–380/晚',
-        detail: '🚗 还车建议：预订租车时直接选“应天门/西工区/老城区门店”或支持“上门取车”的网点，免去跑龙门站还车再折返市区的麻烦。',
-        pay: { wechat: 1, alipay: 1, card: 1 },
-        gmap: '洛阳市老城区'
-      },
-      {
-        name: '丽景门 · 老城十字街 & 管记水席老店',
+        name: '丽景门 · 老城十字街 & 洛邑古城夜游',
         lat: 34.6798, lng: 112.4678,
-        type: 'food',
-        time: '20:30',
-        desc: '从应天门步行或骑行即达丽景门、十字街夜市。主推管记水席老店（牡丹燕菜、连汤肉片、焦炸丸子）。',
-        budget: '¥50–70/人',
-        detail: '🍜 大众点评信号：管记水席老店（仙果市街店）距十字街300米，本地老字号，酸辣胡椒味地道。\n📕 小红书提醒：水席汤汤水水分量很大，2个人点一荤一素两道水席代表菜（牡丹燕菜+连汤肉片或焦炸丸子）再加十字街烤肉串就够了！',
+        type: 'spot',
+        time: '20:15',
+        desc: '应天门往东顺路逛丽景门、十字街夜市吃洛阳水席（管记水席/不翻汤），再去洛邑古城看文峰塔古风灯火。',
+        budget: '水席/小吃 ¥40–70/人',
+        detail: '🍜 顺路吃喝：丽景门十字街推荐尝【管记水席老店】（牡丹燕菜、连汤肉片）或【高记清香园不翻汤】；洛邑古城免费但需在公众号提前扫码预约入园码。',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '洛阳管记水席 丽景门十字街',
+        xhsKeyword: '洛阳丽景门 洛邑古城 夜景',
         dianpingKeyword: '管记水席老店 洛阳',
         reserve: 'https://you.ctrip.com/food/198/106483.html',
         gmap: '洛阳丽景门景区'
       },
       {
-        name: '洛邑古城（汉服夜景备选）',
-        lat: 34.6762, lng: 112.4785,
-        type: 'spot',
-        time: '—',
-        desc: '距丽景门约1.2km，文峰塔与古风灯笼水系极出片。若逛完应天门+丽景门还有体力可去。',
-        budget: '免费（需公众号扫码预约入园）',
-        detail: '🏮 贴士：晚间汉服旅拍密集，人流较大；如果走了一天少林+白马寺+龙门已经腿酸，逛完应天门和丽景门十字街即可回酒店休息。',
+        name: '还车（帕萨特）& 星程洛阳应天门周王城广场酒店',
+        lat: 34.6748, lng: 112.4535,
+        type: 'hotel',
+        time: '21:30',
+        desc: '已订11.5–11.6（高级大床房1晚，入住人：汪辉）。晚上把帕萨特还掉，入住应天门/周王城广场旁星程酒店！',
+        budget: '已预订（高级大床房）',
+        detail: '🏨 位置极佳：酒店就在中州中路周王城广场与应天门核心圈，地铁1号线/2号线交汇，次日早上逛洛阳市区或去洛阳龙门站坐高铁都极其方便！',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '洛阳洛邑古城 夜景',
-        reserve: 'https://gs.ctrip.com/html5/you/travels/198/4097764.html',
-        gmap: '洛阳洛邑古城'
-      },
-      {
-        name: '真不同饭店（中州东路总店 · 水席备选）',
-        lat: 34.6805, lng: 112.4712,
-        type: 'food',
-        time: '—',
-        desc: '中华老字号洛阳水席旗舰店，宫廷装修风格，饭点常有豫剧或唐风演绎。',
-        budget: '¥80–110/人',
-        detail: '🍜 大众点评信号：环境比街头小店更好，可点“不同四味”小份拼盘一次尝遍四道水席名菜。',
-        pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '洛阳真不同水席',
-        dianpingKeyword: '真不同饭店 中州东路店',
-        reserve: 'https://tw.trip.com/guide/attraction/%E5%B0%91%E6%9E%97%E5%AF%BA%E9%96%80%E7%A5%A8.html',
-        gmap: '洛阳真不同饭店'
+        gmap: '星程洛阳应天门周王城广场酒店'
       }
     ]
   },
   {
     id: 4,
     label: 'D4 洛阳·开封',
-    date: '11月6日 周五 · 洛阳博物馆 → 高铁赴开封 → 开封府/延庆观/大相国寺/鼓楼夜市',
-    title: 'D4 · 洛阳博物馆 · 高铁赴汴 · 古城中轴',
+    date: '11月6日 周五 · 上午继续逛洛阳 → 下午高铁赴开封（1.5h）→ 延庆观/开封府/大相国寺/鼓楼/万岁山 → 宿星程开封',
+    title: 'D4 · 洛阳漫游 · 高铁赴开封 · 府衙古寺与万岁山',
     color: '#007aff',
-    routeSummary: '🚄 动线：08:30 南关小碗牛肉汤 → 09:30 洛阳博物馆 → 12:00 小街天府午餐 → 13:30 洛阳龙门站乘高铁赴开封北站（车程1h07m） → 15:30 开封府 + 延庆观 + 大相国寺 → 18:30 黄家老店/第一楼 + 鼓楼夜市',
+    routeSummary: '🚄 当日动线：08:30 洛阳早汤（牛肉汤）+ 洛阳博物馆/天子驾六 → 中午高铁赴开封（约1.5h） → 入住星程开封鼓楼开封府酒店 → 下午串游延庆观（延庆寺）、开封府、大相国寺、鼓楼广场/万岁山夜场',
     locations: [
       {
-        name: '河洛郑波·南关小碗牛肉汤 / 马杰山牛肉汤',
+        name: '河洛郑波·南关小碗牛肉汤 / 马杰山牛肉汤（早餐）',
         lat: 34.6730, lng: 112.4760,
         type: 'food',
         time: '08:30',
-        desc: '洛阳“汤都”灵魂晨间仪式：一碗鲜醇滚烫的牛肉汤，泡上焦脆饼丝或油旋，免费添汤！',
+        desc: '洛阳早晨仪式感：喝一碗滚烫鲜醇的头锅牛肉汤，配焦脆饼丝或油旋。',
         budget: '¥15–25/人',
-        detail: '🍜 大众点评信号：南关小碗牛肉汤汤清味浓，马杰山则是东关百年清真老店；记住洛阳喝汤规矩——早上喝头汤最鲜。',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '洛阳南关小碗牛肉汤 马杰山',
+        xhsKeyword: '洛阳南关小碗牛肉汤',
         dianpingKeyword: '南关小碗牛肉汤 洛阳',
         reserve: 'https://you.ctrip.com/food/198/106412.html',
         gmap: '洛阳南关小碗牛肉汤'
       },
       {
-        name: '洛阳博物馆 ⭐十三朝国宝',
+        name: '洛阳博物馆 / 周王城天子驾六博物馆（上午逛洛阳）',
         lat: 34.6572, lng: 112.4518,
         type: 'spot',
         time: '09:30',
-        desc: '周五上午继续逛洛阳的最佳去处！直奔2楼珍宝馆看曹魏白玉杯、北魏泥塑佛面像、唐三彩黑釉马。',
-        budget: '免费（需提前3–5天公众号预约）',
-        detail: '🏛️ 为什么选洛博：完美补齐龙门石窟之外的十三朝帝都文物脉络，馆内恒温舒适，打车去洛阳龙门高铁站仅15分钟。',
+        desc: '上午继续逛洛阳：首选洛阳博物馆（看曹魏白玉杯、北魏泥塑佛面像、唐三彩黑釉马），或酒店门口的天子驾六车马坑。',
+        budget: '洛博免费（需公众号预约）',
+        detail: '🏛️ 顺路午餐：逛完洛博中午吃一顿【小街天府】（糖醋麻辣小土豆、担担面），随后打车15分钟去洛阳龙门站乘高铁赴开封。',
         pay: { wechat: 1, alipay: 1 },
         xhsKeyword: '洛阳博物馆 珍宝馆 必看',
         reserve: 'http://www.lymuseum.com/',
         gmap: '洛阳博物馆'
       },
       {
-        name: '小街天府（西工小街店 · 午餐）',
-        lat: 34.6745, lng: 112.4435,
-        type: 'food',
-        time: '12:00',
-        desc: '洛阳国民级小吃食堂：糖醋麻辣小土豆、担担面、小街锅贴、桂花米酒，出餐极快不耽误高铁。',
-        budget: '¥25–40/人',
-        detail: '🍜 大众点评信号：全天候营业、翻台极快，糖醋麻辣双拼小土豆几乎桌桌必点。',
-        pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '洛阳小街天府 必点',
-        dianpingKeyword: '小街天府 洛阳',
-        reserve: 'https://hk.trip.com/moments/theme/poi-city-164061-guides-993135/',
-        gmap: '洛阳小街天府'
-      },
-      {
-        name: '高铁跨城：洛阳龙门站 → 开封北站',
+        name: '高铁跨城：洛阳龙门站 → 开封北站（全程约1.5h）',
         lat: 34.5932, lng: 112.4552,
         type: 'transport',
-        time: '13:30',
-        desc: '高铁直达开封北站仅需约1小时07分（加上进出站打车共约1.5h），下午15:00即可投宿开封鼓楼片区。',
-        budget: '高铁二等座 ¥96起',
-        detail: '🚄 动线关键调整：为什么周五下午不去万岁山？因为万岁山《打铁花》当天14:30/15:00必须入园核销后才能抢预约码！周五下午你刚下高铁赶过去已经过了放号点。把周五下午留给开封府+延庆观+大相国寺，周六全天泡万岁山才是最稳解法！',
+        time: '12:30',
+        desc: '高铁车程约1小时07分，加进出站打车共约1.5h，直奔星程开封鼓楼开封府酒店放行李。',
+        budget: '高铁二等座约 ¥96（学生票75折）',
+        detail: '⏰ 万岁山抢号关键提醒：如果你打算【周五（11.6）晚上】就去万岁山看打铁花，建议选11:30–12:30之间发车的高铁，确保在14:30/15:00放号前入园核销抢票！如果你选择周五下午慢逛【延庆观+开封府+大相国寺+鼓楼夜市】，把【万岁山+打铁花】放在周六（11.7）全天玩，时间会宽裕很多！',
         reserve: 'https://train.qunar.com/train/timetable/G1812/luoyanglongmen-to-kaifengbei/2026-11-06',
         gmap: '洛阳龙门站'
       },
       {
-        name: '开封府（天下首府）',
-        lat: 34.7872, lng: 114.3496,
-        type: 'spot',
-        time: '15:30',
-        desc: '北宋第一府衙，位于包公东湖北岸。看府衙大堂、梅花堂、清心楼及西北角天庆观太极八卦台。',
-        budget: '门票 ¥65',
-        detail: '🏛️ 顺路串联：开封府、延庆观、大相国寺、鼓楼广场全部集中在老城2公里半径内，步行或骑共享单车就能丝滑串完。',
+        name: '星程开封鼓楼开封府酒店（D4住宿 · 核心C位）',
+        lat: 34.7915, lng: 114.3518,
+        type: 'hotel',
+        time: '14:15',
+        desc: '已订11.6–11.7（商务大床房1晚，入住人：汪辉）。就在开封府、延庆观、大相国寺、鼓楼广场正中心！',
+        budget: '已预订（商务大床房）',
+        detail: '🏨 神仙选址：你订的这家星程酒店离大相国寺、开封府、延庆观、鼓楼夜市全在步行/骑行5–10分钟圈内，放好行李出门就能无缝逛完这一片！',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '开封府 游玩路线',
-        reserve: 'https://gs.ctrip.com/html5/you/sight/kaifeng165/61455.html',
-        gmap: '开封府'
+        gmap: '星程开封鼓楼开封府酒店'
       },
       {
-        name: '延庆观（元代玉皇阁 · 原计划“延庆寺”）',
-        lat: 34.7895, lng: 114.3442,
+        name: '延庆观（原写“延庆寺”）& 开封府',
+        lat: 34.7872, lng: 114.3496,
         type: 'spot',
-        time: '16:30',
-        desc: '距开封府步行仅6分钟！现存罕见的元代道观建筑，通体无梁木、汉蒙建筑交融的玉皇阁极具古韵。',
-        budget: '门票 ¥30',
-        detail: '📌 名称勘误：你原计划写的“延庆寺”在开封即为国保单位【延庆观】（纪念全真教丘处机之地），紧挨着包公湖与开封府，人少清幽，逛30–40分钟即可。',
+        time: '14:45',
+        desc: '从酒店步行/骑车5分钟即达！先看元代孤品玉皇阁【延庆观】，再逛隔壁北宋天下首府【开封府】。',
+        budget: '延庆观¥30 / 开封府¥65（学生证半价）',
+        detail: '📌 串联动线：延庆观与开封府紧挨在包公东湖北岸，两个点合逛约1.5–2小时，随后往北步行8分钟就是大相国寺。',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '开封延庆观 玉皇阁',
-        reserve: 'https://gs.ctrip.com/html5/you/sight/kaifeng165/9460.html',
-        gmap: '开封延庆观'
+        xhsKeyword: '开封府 延庆观 游玩攻略',
+        reserve: 'https://gs.ctrip.com/html5/you/sight/kaifeng165/61455.html',
+        gmap: '开封府'
       },
       {
         name: '大相国寺（北宋皇家古刹）',
         lat: 34.7932, lng: 114.3528,
         type: 'spot',
-        time: '17:10',
-        desc: '“大相国寺天下雄”，鲁智深倒拔垂杨柳之地，核心必看八角琉璃殿内整棵银杏木雕成的四面千手千眼观音。',
-        budget: '门票 ¥40（17:30停止入场）',
-        detail: '⏰ 时间提醒：大相国寺17:30停止检票、18:00清场，从延庆观骑车5分钟过来刚好赶在夕阳落山前逛完，出寺门就是寺后街第一楼和鼓楼广场！',
+        time: '16:40',
+        desc: '鲁智深倒拔垂杨柳之地，必看八角琉璃殿内整棵银杏木雕成的四面千手千眼观音（17:30停止入场）。',
+        budget: '门票 ¥40（学生证半价¥20）',
         pay: { wechat: 1, alipay: 1 },
         xhsKeyword: '开封大相国寺 八角琉璃殿',
         reserve: 'https://gs.ctrip.com/html5/you/sight/kaifeng165/9458.html',
         gmap: '开封大相国寺'
       },
       {
-        name: '黄家老店 / 第一楼灌汤包（宋菜正餐）',
-        lat: 34.7945, lng: 114.3510,
-        type: 'food',
-        time: '18:15',
-        desc: '开封灌汤包与桶子鸡双雄：黄家老店本地口碑更稳，第一楼就在大相国寺隔壁（寺后街总店）最顺路。',
-        budget: '¥55–85/人',
-        detail: '🍜 大众点评信号：黄家老店的桶子鸡咸香有嚼劲、灌汤包皮薄汤鲜；第一楼适合点什锦灌汤包+鲤鱼焙面。\n📕 小红书提醒：“轻轻提、慢慢移、先开窗、后喝汤”，千万别一口咬下去烫嘴！',
-        pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '开封黄家老店 第一楼灌汤包',
-        dianpingKeyword: '黄家老店 开封',
-        reserve: 'https://you.ctrip.com/food/165/11169507.html',
-        gmap: '开封第一楼寺后街总店'
-      },
-      {
-        name: '鼓楼广场 · 鼓楼夜市（夜游逛吃）',
+        name: '鼓楼广场 · 鼓楼夜市 & 第一楼/黄家老店',
         lat: 34.7960, lng: 114.3542,
         type: 'food',
-        time: '19:45',
-        desc: '中国最早打破坊市宵禁的北宋夜市传承地！沿鼓楼、马道街、书店街一路逛吃羊肉炕馍、杏仁茶、炒凉粉。',
-        budget: '¥20–50/人',
-        detail: '🏮 夜市攻略：鼓楼夜景灯火辉煌，旁边书店街适合散步消食；若想体验更接地气的本地夜市，也可打车10分钟去【西司夜市】。',
+        time: '18:00',
+        desc: '大相国寺出来步行即达寺后街第一楼灌汤包、黄家老店桶子鸡与鼓楼夜市（羊肉炕馍、杏仁茶、炒凉粉）。',
+        budget: '¥35–75/人',
+        detail: '🍜 晚餐与夜游：如果周五晚不去万岁山，就在鼓楼广场+书店街+大宋御河慢悠悠逛吃；如果周五晚直接冲万岁山看打铁花，看完散场可搭万岁山门口排队的“夜市专线公交”直达鼓楼广场吃夜宵，走回星程酒店仅几百米！',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '开封鼓楼夜市 必吃小吃',
-        dianpingKeyword: '鼓楼夜市 开封',
-        reserve: 'http://221.176.159.209:9001/kfsglqwz/c00173/pc/content/content_2052670647879380992.html',
+        xhsKeyword: '开封鼓楼夜市 黄家老店 第一楼',
+        dianpingKeyword: '黄家老店 开封',
+        reserve: 'https://you.ctrip.com/food/165/11169507.html',
         gmap: '开封鼓楼夜市'
-      },
-      {
-        name: '开封鼓楼/大相国寺片区酒店（宿开封）',
-        lat: 34.7950, lng: 114.3505,
-        type: 'hotel',
-        time: '21:30',
-        desc: '住在鼓楼或大相国寺周边，吃喝处于C位，次日去万岁山武侠城和开封火车站都只需15分钟车程。',
-        budget: '¥200–350/晚',
-        pay: { wechat: 1, alipay: 1, card: 1 },
-        gmap: '开封市鼓楼区'
-      },
-      {
-        name: '西司夜市（本地烟火备选）',
-        lat: 34.7938, lng: 114.3385,
-        type: 'food',
-        time: '—',
-        desc: '包公祠北侧的本地人宝藏夜市，物价更亲民，二嫂羊肉炕馍、袋装杏仁茶、黄焖鱼人气极高。',
-        budget: '¥20–40/人',
-        pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '开封西司夜市 必吃',
-        dianpingKeyword: '西司夜市 开封',
-        reserve: 'https://travelnews.qunar.com/qa_strategy/kaifeng-budget-food-travel-guide-wanshuishan',
-        gmap: '开封西司夜市'
       }
     ]
   },
   {
     id: 5,
     label: 'D5 万岁山·返杭',
-    date: '11月7日 周六 · 万岁山武侠城全天 + 14:30抢号 + 城寨沙场打铁花 → 22:00返杭',
-    title: 'D5 · 万岁山武侠城 · 打铁花秘籍 · 22:00返杭',
+    date: '11月7日 周六 · 万岁山武侠城全天深度 + 18:40城寨沙场8~15排打铁花 → 22:08 D232返杭',
+    title: 'D5 · 万岁山打铁花秘籍 · 22:08 D232返杭',
     color: '#ff2d55',
-    routeSummary: '⚔️ 动线：08:30 四味烩菜/邢家锅贴 → 09:30 万岁山武侠城入园（寄存行李） → 14:30 园内准时抢19:30/第一场打铁花预约码 → 18:40 进北区【城寨沙场】8–15排占座 → 20:10–20:30 看第一场打铁花 → 20:35 北门东京大道步行600m打车 → 22:00 开封站火车回杭',
+    routeSummary: '⚔️ 当日动线：08:30 开封早午餐（四味烩菜/邢家锅贴） → 退房寄存行李 → 万岁山武侠城全天看武侠实景剧 → 14:30/15:00 园内实名抢《打铁花》预约码 → 18:40 进北区【城寨沙场】8~15排落座连看马战+20:10第一场打铁花 → 20:30 北门沿东京大道走500~800m打车 → 22:08 开封站乘 D232 动卧返杭',
     locations: [
       {
-        name: '赵家名吃四味烩菜 / 稻香居邢家锅贴',
+        name: '赵家名吃四味烩菜 / 稻香居锅贴（早餐）',
         lat: 34.7918, lng: 114.3550,
         type: 'food',
         time: '08:30',
-        desc: '开封硬核早午餐：一碗羊汤四味菜（面筋、牛肉丸、黄花菜、酥肉）配白吉馍，或焦脆流汁的三鲜锅贴。',
+        desc: '就在星程酒店附近！尝开封地道四味菜配锅盔，或三鲜脆底锅贴、胡辣汤。',
         budget: '¥15–30/人',
-        detail: '🍜 大众点评信号：东大寺门食品街的赵家四味菜是本地早餐顶流；吃饱后退房，带行李去万岁山游客中心免费寄存（方便晚上看完打铁花直接从万岁山北门奔火车站，不用回酒店折返！）。',
+        detail: '🧳 行李安排：万岁山门票80元3天内可无限次进出！你可以把行李寄存在星程酒店（或带去万岁山游客中心寄存），轻装入园。',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '开封东大寺四味菜 邢家锅贴',
+        xhsKeyword: '开封四味菜 锅贴',
         dianpingKeyword: '赵家名吃四味烩菜 开封',
         reserve: 'https://you.ctrip.com/food/165/16004487.html',
-        gmap: '开封东大寺清真美食街'
+        gmap: '开封东大寺美食街'
       },
       {
-        name: '万岁山大宋武侠城（白天演艺 + 14:30抢号）',
+        name: '万岁山大宋武侠城 ⭐内嵌《一篇秒懂打铁花占座&撤离图》',
         lat: 34.8192, lng: 114.3425,
         type: 'spot',
         time: '09:30',
-        desc: '80元门票含上百场实景武侠剧！必看《三打祝家庄》《神舟传奇》《王婆说媒》，14:30准时在园内抢打铁花！',
-        budget: '门票 ¥80（3天内无限次入园）',
-        detail: '⏰ 预约放号铁律：\n• 《打铁花》进园检票后免费实名预约！常规场次 19:30、21:00（周六客流大常加演）。\n• 放号时间：【14:30 抢第一场】、【15:00 抢第二场】。因为你今晚要赶 22:00 的火车，【必须定好14:28闹钟死磕第一场（20:10–20:30上演）】！\n• 园内物价极良心：矿泉水¥1.5，午餐直接在园内十字坡/水浒街吃小吃即可。',
+        desc: '全天刷《三打祝家庄》《神舟传奇》《王婆说媒》；14:30/15:00抢号，18:40进北区【城寨沙场】第8~15排连看马战与《打铁花》！',
+        budget: '门票 ¥80（学生票¥40，3天有效）',
+        detail: '🔥 下方已为你绘制《一篇秒懂万岁山打铁花占座+北门防堵导览图》，把你的14:30/15:00放号时间、18:40提前落座连看、8~15排防烫衣黄金区、以及北门东京大道步行500~800米打车路线全部可视化标出！',
         pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '开封万岁山武侠城 节目单 必看演出',
+        guideKey: 'wansuishan',
+        xhsKeyword: '万岁山打铁花 城寨沙场 节目单',
         reserve: 'https://gs.ctrip.com/html5/you/sight/kaifeng165/77323.html',
         gmap: '开封万岁山大宋武侠城'
       },
       {
-        name: '北区【城寨沙场】看台 ⭐打铁花占座秘诀',
-        lat: 34.8235, lng: 114.3432,
-        type: 'spot',
-        time: '18:40',
-        desc: '18:40–19:00直接进城寨沙场环形大看台落座！选正对舞台中央【第8至15排】，看完前序马战原地不动连看打铁花！',
-        budget: '免费实名预约核销',
-        detail: '🔥 独家实操秘籍（完全融合你的笔记）：\n1. 【千万别等20:00再去排队】：届时看台早已封控满员！18:40–19:00进场先看前一场大型马术实景剧（如夜场《三打祝家庄》或《神舟传奇》），演完原地绝对不要起身离开，直接连看 20:10–20:30 的《打铁花》（演出约15–20分钟）！\n2. 【黄金排数 8–15 排】：打铁花结合水上火壶、风火轮与高空铁水击打，前3排偶有细碎铁屑火星顺风飘落，秋冬穿的羽绒服、冲锋衣极易被烫出小破洞。坐正中第8–15排，既能拍出漫天金雨倒映水面全景，又绝对安全！\n3. 【散场防堵撤离】：20:30打铁花一结束，立刻从【北门】出园，顺着【东京大道】往东或往西步行500–800米离开拥堵核心区再打车！',
-        pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '万岁山打铁花 城寨沙场 座位攻略',
-        reserve: 'https://kf.bendibao.com/tour/jingdian/list10.htm',
-        gmap: '万岁山大宋武侠城北门'
-      },
-      {
-        name: '开封站（22:00 火车返杭）',
+        name: '开封站（D232 22:08 发车 → 次日08:15 抵杭州）',
         lat: 34.7745, lng: 114.3512,
         type: 'transport',
-        time: '21:15',
-        desc: '从东京大道打车约20–25分钟抵达开封站，从容安检候车，搭乘22:00火车返回杭州。',
-        budget: '硬卧/软卧返杭',
-        detail: '🚂 衔接时间账：20:30打铁花结束 → 20:45取完寄存行李并走出东京大道拥堵段 → 21:15抵达开封站 → 22:00发车回杭，时间刚刚好！',
+        time: '21:20',
+        desc: '已购 D232 次列车（22:08 开封站 → 08:15+1 杭州站，二等卧 06车01号下铺 · 学生票）。睡一觉周日早上8点15直达杭州！',
+        budget: '已购学生票 ¥224',
+        detail: '🚂 完美衔接时刻表：\n• 20:10–20:30 看完第一场《打铁花》\n• 20:35 从万岁山【北门】出园，沿东京大道步行500~800米避开堵车核心区叫网约车（若行李存酒店，顺路让司机经停星程酒店2分钟拿行李再去开封站，全程仅约25分钟）\n• 21:20 抵达开封站，凭身份证+学生证从容进站上车，22:08 准时发车回杭！',
         reserve: 'https://train.qunar.com/train/tickets/kaifeng-to-hangzhou',
         gmap: '开封火车站'
-      }
-    ]
-  },
-  {
-    id: 6,
-    label: 'D6 延展方案',
-    date: '11月8日 周日（可选+1天方案） · 若延至11.8晚返杭的满配玩法',
-    title: 'D6 · 可选延展日 · 清明上河园 & 城墙漫游',
-    color: '#5856d6',
-    routeSummary: '✨ 6天满配逻辑：如果能加一天到11.8周日晚回杭，11.7周六晚看完打铁花就不用赶22:00火车！11.8周日白天可慢逛【清明上河园】或【开封城墙+铁塔公园】，傍晚从开封北站/郑州东站乘高铁5.5h回杭州东。',
-    locations: [
-      {
-        name: '清明上河园（宋代皇家园林与民俗沉浸）',
-        lat: 34.8085, lng: 114.3418,
-        type: 'spot',
-        time: '09:00',
-        desc: '5天版建议砍掉，6天版强烈推荐补上！按1:1复原张择端名画，虹桥、上善门、岳飞枪挑小梁王、包公迎宾极出片。',
-        budget: '门票 ¥120',
-        detail: '🎨 万岁山 vs 清明上河园：万岁山赢在热血江湖互动与打铁花；清明上河园赢在精致宋式建筑美学与古风拍照。多留11.8一天，两个王牌景区都能从容玩透！',
-        pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '开封清明上河园 必看演出 拍照',
-        reserve: 'https://travelnews.qunar.com/qa_strategy/kaifeng-qingmingshangheyuan-vs-wansuishan-wuxiacity-travel-guide',
-        gmap: '开封清明上河园'
-      },
-      {
-        name: '开封城墙（大梁门 · 古马道城摞城遗址）',
-        lat: 34.8025, lng: 114.3325,
-        type: 'spot',
-        time: '14:00',
-        desc: '中国第二大古代城垣建筑，在大梁门看“城摞城”地下6层古城奇观，在城墙步道骑行吹秋风。',
-        budget: '门票 ¥40',
-        detail: '🧱 轻松备选：如果不想连逛两个大型主题公园，11.8上午逛开封城墙+铁塔公园（天下第一琉璃塔），下午喝茶买花生糕伴手礼，节奏极度惬意。',
-        pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '开封城墙 大梁门 城摞城',
-        reserve: 'https://gs.ctrip.com/html5/you/sight/kaifeng165/126811.html',
-        gmap: '开封城墙大梁门'
-      },
-      {
-        name: '兴盛德花生糕（伴手礼采购）',
-        lat: 34.7905, lng: 114.3485,
-        type: 'food',
-        time: '16:00',
-        desc: '返程前必带的开封非遗伴手礼：兴盛德麻辣花生与传统千层花生糕，入口即化。',
-        budget: '¥30–60/人',
-        pay: { wechat: 1, alipay: 1 },
-        xhsKeyword: '开封兴盛德花生 花生糕 伴手礼',
-        dianpingKeyword: '兴盛德花生 开封',
-        reserve: 'https://you.ctrip.com/food/0/7577515.html',
-        gmap: '开封兴盛德花生'
-      },
-      {
-        name: '开封北站 / 郑州东站（高铁返杭）',
-        lat: 34.8465, lng: 114.2580,
-        type: 'transport',
-        time: '17:30',
-        desc: '从开封北站直达杭州东（或20分钟高铁到郑州东中转），最快5个多小时当晚即达杭州。',
-        budget: '高铁二等座 ¥400–450',
-        reserve: 'https://train.qunar.com/train/tickets/hangzhou-to-kaifengbei/2026-11-10',
-        gmap: '开封北站'
       }
     ]
   }
@@ -872,63 +1010,128 @@ function overviewContent() {
   return `
 <div class="hero">
   <h1>河南五城参考行程地图</h1>
-  <p class="subtitle">11.3 周二 – 11.7 周六（可选延至 11.8） · 郑州 / 宝泉 / 登封 / 洛阳 / 开封</p>
+  <p class="subtitle">11.3 周二 – 11.7 周六 · 汪辉专属行程单（含车票D230/D232 · 四晚酒店 · 一篇秒懂导览图）</p>
 </div>
 <div class="info-grid">
-  <div class="info-card"><div class="label">住宿落脚</div><div class="value">D1郑州 · D2登封<br>D3-4洛阳 · D4-5开封</div></div>
-  <div class="info-card"><div class="label">交通组合</div><div class="value">D1晚提帕萨特自驾<br>D3晚洛阳还车+高铁</div></div>
-  <div class="info-card"><div class="label">核心抢票锚点</div><div class="value">河博提前5天17:00<br>打铁花当日14:30</div></div>
-  <div class="info-card"><div class="label">行程弹性</div><div class="value">5天标准版（周六返）<br>6天满配版（周日返）</div></div>
+  <div class="info-card"><div class="label">往返动卧（学生票）</div><div class="value">去：11.2 D230 21:25→08:08<br>返：11.7 D232 22:08→08:15</div></div>
+  <div class="info-card"><div class="label">四晚已订酒店</div><div class="value">D1汉庭二七 · D2汉庭嵩阳<br>D3星程应天门 · D4星程鼓楼</div></div>
+  <div class="info-card"><div class="label">自驾与高铁衔接</div><div class="value">D1晚郑州提帕萨特<br>D3晚洛阳还车 · D4高铁开封</div></div>
+  <div class="info-card"><div class="label">必带证件提醒</div><div class="value">身份证 + 驾驶证<br><span style="color:var(--tint-red)">学生证（乘车+门票半价）</span></div></div>
 </div>
 
-<div class="pay-summary" style="border-left: 4px solid var(--accent);">
-  <h4>📱 手机端打开 & 唤醒高德地图 App 指南</h4>
-  • <strong>方法1（最丝滑 · 生成专属手机网页）：</strong>将本网页部署到免费静态托管（如 Vercel、Netlify Drop 或 GitHub Pages），手机用 Safari / Chrome 打开后点击分享 → <strong>「添加到主屏幕」</strong>，即可像独立 App 一样全屏使用！<br>
-  • <strong>方法2（直接传文件到手机）：</strong>下载源码包中的 <code>henan-trip-map.html</code> 发到手机，选择<strong>「用系统浏览器（Safari / Chrome / 夸克）打开」</strong>（不要停留在微信内置预览页，否则微信会拦截 App 唤醒协议）。<br>
-  • <strong>高德 App 一键跳转：</strong>在手机上点击任一地点的 <strong>「📍 导航」</strong>，选择 <strong>「🧭 高德地图 App（查看位置）」</strong> 或 <strong>「🚗 高德地图 App（一键路线导航）」</strong>，即可直接唤醒手机里的高德地图 App！
-</div>
-<div class="section-head">每日行程速览（点击切换地图与时间轴）</div>
+<div class="section-head">每日行程与「一篇秒懂」导览图入口（点击切换）</div>
 <div class="day-list">${DAYS.slice(1).map(d=>`<div class="card" onclick="go(${d.id})"><div class="name"><span class="dot" style="background:${d.color}"></span>${d.label} · ${d.title.split('·').slice(1).join('·')}</div><div class="desc">${d.date}</div></div>`).join('')}</div>
 
-<div class="section-head">路线诊断：替你砍了什么、调了什么？</div>
+<div class="section-head">四晚酒店与车票核验清单（已同步标入每日地图）</div>
 <div class="pay-summary">
-  <h4>1. 关键动线调优：万岁山移至 11.7 周六全天</h4>
-  <span class="warn">原计划隐患：</span>万岁山《打铁花》必须在<strong>入园核销后</strong>，于当天 <strong>14:30 / 15:00</strong> 在小程序实名抢号。若 11.6 周五下午才从洛阳坐高铁去开封，到园早已错过 15:00 放号！<br>
-  <span class="ok-text">优化方案：</span>11.6 周五下午逛开封府 + 延庆观（原写延庆寺） + 大相国寺 + 鼓楼夜市；<strong>11.7 周六一早进万岁山存行李，14:30 在园内稳抢第一场打铁花</strong>，18:40 坐城寨沙场 8–15 排，20:30 看完从北门东京大道撤离赶 22:00 火车！
-</div>
-<div class="pay-summary">
-  <h4>2. 主动减法：砍掉 3 个高风险累赘点</h4>
-  • <strong>砍 D1 瑞光创意工厂（降为备选）：</strong>与 1952 油化厂同质化极高，专心逛油化厂更出片。<br>
-  • <strong>砍 D3 少林寺三皇寨爬山线：</strong>为保下午白马寺与 <strong>16:00 龙门石窟柔光入园</strong>，少林寺只走常住院+武术馆+塔林（12:00前撤离）。<br>
-  • <strong>砍 5天版清明上河园（放入D6延展）：</strong>避免与万岁山同日死磕导致审美疲劳；若加一天到 11.8 周日返杭则完美补齐。
+  <h4>🏨 已订酒店坐标锚点（点击对应日期即可一键导航）</h4>
+  • <strong>11.3 周二（郑州）：</strong>汉庭郑州二七广场地铁站酒店（08:08下车步行10min先放行李，轻装出发！）<br>
+  • <strong>11.4 周三（登封）：</strong>汉庭郑州登封嵩阳书院酒店（宝泉自驾过来直接入住，距次日少林寺仅20min车程）<br>
+  • <strong>11.5 周四（洛阳）：</strong>星程洛阳应天门周王城广场酒店（逛完龙门亮灯、应天门北广场后还车入住）<br>
+  • <strong>11.6 周五（开封）：</strong>星程开封鼓楼开封府酒店（位于延庆观、开封府、大相国寺、鼓楼正中心）
 </div>
 
-<div class="section-head">抢票与防坑硬核备忘</div>
 <div class="pay-summary">
-  <h4>⏰ 两大必设闹钟</h4>
-  • <span class="accent-text">河南博物院：</span>提前 5 天 <strong>17:00</strong> 放票（11.3 周二参观需在 <strong>10月29日 17:00</strong> 准时抢）。<br>
-  • <span class="warn">万岁山《打铁花》：</span>入园后免费实名预约，<strong>14:30 抢 19:30/第一场，15:00 抢第二场</strong>。18:40 进北区【城寨沙场】<strong>第 8–15 排</strong>（防前3排火星烫坏羽绒服/冲锋衣），看完前序马战原地不动连看打铁花！散场走<strong>北门沿东京大道步行 500–800 米</strong>再打车。<br>
-  • <span class="accent-text">应天门激光秀提醒：</span>11.5 是周四，应天门北广场 18:00–22:30 正常亮灯可免费拍大片，但 20:00/20:30 的 3D 激光投影秀仅在周末/节假日常态播放。
+  <h4>🔥 万岁山《打铁花》抢号 & 8~15排占座秘籍</h4>
+  • <strong>预约放号：</strong>进园后免费实名预约，<strong>14:30 抢 19:30场（20:10–20:30上演第一场）</strong>，15:00 抢 21:00场（周五/周六常在21:10–21:30加演第二场）。<br>
+  • <strong>免排队连看秘诀：</strong>千万别等20:00才去排队（看台早已满员封控）！<strong>18:40–19:00 直接进北区【城寨沙场】环形看台落座</strong>，看完前一场马术剧后原地别起身，直接连看打铁花！<br>
+  • <strong>优选第 8~15 排：</strong>避开前3排，防止铁屑火星顺风飘落烫破秋冬羽绒服/冲锋衣，正中8~15排拍漫天金雨倒映水面最绝！<br>
+  • <strong>散场防堵：</strong>从<strong>北门出园</strong>，顺<strong>东京大道往东或往西步行500~800米</strong>再打车（或乘门口“夜市专线公交”去鼓楼广场），周六晚看完第一场20:30出园去开封站赶 <strong>22:08 D232</strong> 稳稳当当！
 </div>
 
 <div class="section-head">图例</div>
 <div class="legend">
   <div class="legend-item"><div class="legend-dot" style="background:var(--tint-red)"></div>餐厅/夜市</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-blue)"></div>景点</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-orange)"></div>酒店/租还车</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--text-tertiary)"></div>交通枢纽</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-blue)"></div>景点（含秒懂导览图）</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-orange)"></div>已订酒店/租还车</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--text-tertiary)"></div>火车/高铁枢纽</div>
 </div>`;
 }
 
 // ╔══════════════════════════════════════════════════════════════╗
-// ║  ENGINE                                                      ║
+// ║  MAP ENGINE (Keyless Gaode Chinese Vector + OSM Switcher)    ║
 // ╚══════════════════════════════════════════════════════════════╝
 
 const map = L.map('map', { center: [HOTEL.lat || 34.75, HOTEL.lng || 113.66], zoom: 8, zoomControl: false, attributionControl: true });
 L.control.zoom({ position: 'topright' }).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
 
-/* ── Geolocation ── */
+const BASEMAPS = [
+  {
+    id: 'amap',
+    name: '🗺️ 底图：高德中文（免Key极速）',
+    url: 'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
+    opts: { subdomains: ['1', '2', '3', '4'], maxZoom: 18, attribution: '© 高德地图 AutoNavi' },
+    gcj02: true
+  },
+  {
+    id: 'osm',
+    name: '🌍 底图：OpenStreetMap（全球免Key）',
+    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    opts: { maxZoom: 19, attribution: '© OpenStreetMap' },
+    gcj02: false
+  },
+  {
+    id: 'esri',
+    name: '✨ 底图：Esri 浅灰极简（免Key）',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    opts: { maxZoom: 16, attribution: '© Esri' },
+    gcj02: false
+  }
+];
+let curBasemapIdx = 0;
+let activeTileLayer = L.tileLayer(BASEMAPS[0].url, BASEMAPS[0].opts).addTo(map);
+
+function outOfChina(lat, lon) {
+  return (lon < 72.004 || lon > 137.8347 || lat < 0.8293 || lat > 55.8271);
+}
+function transformLat(x, y) {
+  let ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
+  ret += (20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0 / 3.0;
+  ret += (20.0 * Math.sin(y * Math.PI) + 40.0 * Math.sin(y / 3.0 * Math.PI)) * 2.0 / 3.0;
+  ret += (160.0 * Math.sin(y / 12.0 * Math.PI) + 320 * Math.sin(y * Math.PI / 30.0)) * 2.0 / 3.0;
+  return ret;
+}
+function transformLon(x, y) {
+  let ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
+  ret += (20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0 / 3.0;
+  ret += (20.0 * Math.sin(x * Math.PI) + 40.0 * Math.sin(x / 3.0 * Math.PI)) * 2.0 / 3.0;
+  ret += (150.0 * Math.sin(x / 12.0 * Math.PI) + 300.0 * Math.sin(x / 30.0 * Math.PI)) * 2.0 / 3.0;
+  return ret;
+}
+function toMapCoord(lat, lon) {
+  if (!BASEMAPS[curBasemapIdx].gcj02 || outOfChina(lat, lon)) return [lat, lon];
+  const a = 6378245.0, ee = 0.00669342162296594323;
+  let dLat = transformLat(lon - 105.0, lat - 35.0);
+  let dLon = transformLon(lon - 105.0, lat - 35.0);
+  const radLat = lat / 180.0 * Math.PI;
+  let magic = Math.sin(radLat);
+  magic = 1 - ee * magic * magic;
+  const sqrtMagic = Math.sqrt(magic);
+  dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * Math.PI);
+  dLon = (dLon * 180.0) / (a / sqrtMagic * Math.cos(radLat) * Math.PI);
+  return [lat + dLat, lon + dLon];
+}
+
+const BasemapControl = L.Control.extend({
+  options: { position: 'topleft' },
+  onAdd() {
+    const btn = L.DomUtil.create('button', 'basemap-btn');
+    btn.type = 'button';
+    btn.textContent = BASEMAPS[curBasemapIdx].name;
+    btn.title = '点击切换地图源（高德中文 / OpenStreetMap / Esri）';
+    L.DomEvent.disableClickPropagation(btn);
+    btn.addEventListener('click', () => {
+      curBasemapIdx = (curBasemapIdx + 1) % BASEMAPS.length;
+      map.removeLayer(activeTileLayer);
+      activeTileLayer = L.tileLayer(BASEMAPS[curBasemapIdx].url, BASEMAPS[curBasemapIdx].opts).addTo(map);
+      btn.textContent = BASEMAPS[curBasemapIdx].name;
+      showDay(cur);
+    });
+    return btn;
+  }
+});
+new BasemapControl().addTo(map);
+
 const LocateControl = L.Control.extend({
   options: { position: 'bottomright' },
   onAdd() {
@@ -948,13 +1151,14 @@ new LocateControl().addTo(map);
 let locMarker, locCircle;
 map.on('locationfound', e => {
   const r = e.accuracy / 2;
-  if (locMarker) { locMarker.setLatLng(e.latlng); locCircle.setLatLng(e.latlng).setRadius(r); }
+  const pt = toMapCoord(e.latlng.lat, e.latlng.lng);
+  if (locMarker) { locMarker.setLatLng(pt); locCircle.setLatLng(pt).setRadius(r); }
   else {
-    locMarker = L.marker(e.latlng, {
+    locMarker = L.marker(pt, {
       icon: L.divIcon({ className:'', html:'<div style="width:14px;height:14px;border-radius:50%;background:#007aff;border:2.5px solid #fff;box-shadow:0 0 6px rgba(0,122,255,.5)"></div><div class="loc-pulse" style="position:absolute;top:0;left:0"></div>', iconSize:[14,14], iconAnchor:[7,7] }),
       zIndexOffset: 2000
     }).addTo(map);
-    locCircle = L.circle(e.latlng, { radius: r, color: '#007aff', fillColor: '#007aff', fillOpacity: .08, weight: 1 }).addTo(map);
+    locCircle = L.circle(pt, { radius: r, color: '#007aff', fillColor: '#007aff', fillOpacity: .08, weight: 1 }).addTo(map);
   }
 });
 map.on('locationerror', () => {});
@@ -972,13 +1176,14 @@ function showDay(idx) {
   clearMap();
   if (idx === 0) {
     const pts = [];
-    DAYS.forEach(d => d.locations.forEach(l => { if(l.lat) pts.push([l.lat,l.lng]); }));
+    DAYS.forEach(d => d.locations.forEach(l => { if(l.lat) pts.push(toMapCoord(l.lat,l.lng)); }));
     if(pts.length) map.fitBounds(pts, {padding:[30,30]});
     DAYS.slice(1).forEach(d => {
       const dayPts = [];
       d.locations.filter(l=>l.time!=='—').forEach(l => {
-        dayPts.push([l.lat, l.lng]);
-        const m = L.circleMarker([l.lat,l.lng], { radius:5, fillColor:d.color, color:'#fff', weight:1.5, fillOpacity:.92 }).addTo(map).bindPopup(`<b>${l.name}</b><br><span style="color:#86868b">${d.label} · ${l.time}</span>`);
+        const pt = toMapCoord(l.lat, l.lng);
+        dayPts.push(pt);
+        const m = L.circleMarker(pt, { radius:5, fillColor:d.color, color:'#fff', weight:1.5, fillOpacity:.92 }).addTo(map).bindPopup(`<b>${l.name}</b><br><span style="color:#86868b">${d.label} · ${l.time}</span>`);
         markers.push(m);
       });
       if(dayPts.length > 1) {
@@ -993,12 +1198,13 @@ function showDay(idx) {
   const coords = [];
   day.locations.forEach(l => {
     if(!l.lat) return;
-    const m = L.marker([l.lat,l.lng], { icon: icon(day.color, emojis[l.type]||'📌') }).addTo(map);
+    const pt = toMapCoord(l.lat, l.lng);
+    const m = L.marker(pt, { icon: icon(day.color, emojis[l.type]||'📌') }).addTo(map);
     const gmapQ = l.gmap||encodeURIComponent(l.name);
-    const safeName = l.name.replace(/'/g,"\\'");
+    const safeName = l.name.replace(/'/g, "\\'");
     m.bindPopup(`<b>${l.name}</b>${l.time!=='—'?'<br><span style="color:#86868b">'+l.time+'</span>':''}<br>${l.desc}${l.budget?'<br><span style="color:#ff9500">'+l.budget+'</span>':''}<br><button type="button" class="popup-nav-btn" onclick="openAS('${safeName}',${l.lat},${l.lng},'${gmapQ}')">📍 导航</button>${l.reserve?' · <a href="'+l.reserve+'" target="_blank" rel="noopener">🔗 详情/预约</a>':''}`);
     markers.push(m);
-    if(l.time!=='—') coords.push([l.lat,l.lng]);
+    if(l.time!=='—') coords.push(pt);
   });
   if(coords.length>1) { const pl = L.polyline(coords, { color:day.color, weight:2.5, opacity:.55, dashArray:'6,5' }).addTo(map); polylines.push(pl); }
   if(coords.length) map.fitBounds(coords, { padding:[40,40], maxZoom:14 });
@@ -1008,7 +1214,7 @@ function showDay(idx) {
 function payChips(pay) {
   if(!pay) return '';
   let h = '<div class="pays">';
-  const m = { wechat:'💚 微信支付', alipay:'💙 支付宝', card:'💳 刷卡/信用免押', cash:'💴 现金' };
+  const m = { wechat:'💚 微信支付', alipay:'💙 支付宝', card:'💳 刷卡/免押', cash:'💴 现金' };
   for(const [k,label] of Object.entries(m)) {
     if(pay[k]!==undefined) { const c = pay[k]===1?'ok':pay[k]===0.5?'idk':'no'; h += `<span class="pay ${c}">${label}</span>`; }
   }
@@ -1036,7 +1242,6 @@ function dpWebUrl(loc) { return `https://m.dianping.com/searchshop?keyword=${enc
 
 window._extLocs = {};
 DAYS.forEach(d => d.locations.forEach(l => { window._extLocs[`${d.id}::${l.name}`] = l; }));
-window._xhsLocs = window._extLocs;
 
 const IS_MOBILE = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent || '');
 function openExt(key, kind) {
@@ -1051,9 +1256,19 @@ function openExt(key, kind) {
 function openXhs(key) { return openExt(key, 'xhs'); }
 function openDp(key)  { return openExt(key, 'dp'); }
 
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  img.src = src;
+  lb.classList.add('show');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+}
+
 function locCard(loc, dayIdx) {
   const dot = loc.type==='food'?'food':loc.type==='spot'?'spot':loc.type==='drink'?'drink':loc.type==='hotel'?'hotel':'transport';
-  const bdg = loc.type==='food'?'<span class="badge food">餐</span>':loc.type==='spot'?'<span class="badge spot">景</span>':loc.type==='drink'?'<span class="badge drink">饮</span>':loc.type==='hotel'?'<span class="badge hotel">住/车</span>':'<span class="badge transport">行</span>';
+  const bdg = loc.type==='food'?'<span class="badge food">餐</span>':loc.type==='spot'?'<span class="badge spot">景</span>':loc.type==='drink'?'<span class="badge drink">饮</span>':loc.type==='hotel'?'<span class="badge hotel">住/车</span>':'<span class="badge transport">车票/行</span>';
   const uid = `d${dayIdx}-${loc.name.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g,'')}`;
   const locKey = `${dayIdx}::${loc.name}`;
   const gmapQ = loc.gmap||encodeURIComponent(loc.name);
@@ -1069,7 +1284,8 @@ function locCard(loc, dayIdx) {
     lnk += `<a href="${dpHref}" target="_blank" rel="noopener" onclick="return openDp('${locKey.replace(/'/g,"\\'")}')" class="btn dp">🍜 大众点评</a>`;
   }
   if(loc.reserve) lnk += `<a href="${loc.reserve}" target="_blank" rel="noopener" class="btn rsv">📅 官网/指南</a>`;
-  return `<div class="tl-item"><div class="tl-dot ${dot}"></div><div class="card" onclick="if(!event.target.closest('.btn,.links'))toggle('${uid}')"><div class="time">${loc.time!=='—'?loc.time:'备选'}</div><div class="name">${bdg} ${loc.name}</div><div class="desc">${loc.desc}</div>${loc.budget?'<div class="budget">'+loc.budget+'</div>':''}${payChips(loc.pay)}<div class="links">${lnk}</div>${loc.detail?'<div class="details" id="'+uid+'">'+loc.detail.replace(/\n/g,'<br>')+'</div>':''}</div></div>`;
+  const guideHtml = (loc.guideKey && VISUAL_GUIDES[loc.guideKey]) ? VISUAL_GUIDES[loc.guideKey] : '';
+  return `<div class="tl-item"><div class="tl-dot ${dot}"></div><div class="card" onclick="if(!event.target.closest('.btn,.links,.guide-map-box'))toggle('${uid}')"><div class="time">${loc.time!=='—'?loc.time:'备选'}</div><div class="name">${bdg} ${loc.name}</div><div class="desc">${loc.desc}</div>${loc.budget?'<div class="budget">'+loc.budget+'</div>':''}${payChips(loc.pay)}<div class="links">${lnk}</div>${guideHtml}${loc.detail?'<div class="details" id="'+uid+'">'+loc.detail.replace(/\n/g,'<br>')+'</div>':''}</div></div>`;
 }
 
 function renderDay(idx) {
@@ -1078,8 +1294,8 @@ function renderDay(idx) {
   const alt = d.locations.filter(l=>l.time==='—');
   let h = `<div class="day-head"><h2>${d.title}</h2><p>${d.date}</p></div>`;
   if(d.routeSummary) h += `<div class="route-bar">${d.routeSummary}</div>`;
-  if(main.length) { h += '<div class="section-head">当日主线行程（点击卡片收起/展开秘籍）</div><div class="timeline">'; main.forEach(l => h += locCard(l, idx)); h += '</div>'; }
-  if(alt.length) { h += '<div class="section-head">顺路备选与替换项</div><div class="timeline">'; alt.forEach(l => h += locCard(l, idx)); h += '</div>'; }
+  if(main.length) { h += '<div class="section-head">当日行程时间轴（含直观导览图与一键高德导航）</div><div class="timeline">'; main.forEach(l => h += locCard(l, idx)); h += '</div>'; }
+  if(alt.length) { h += '<div class="section-head">顺路备选</div><div class="timeline">'; alt.forEach(l => h += locCard(l, idx)); h += '</div>'; }
   return h;
 }
 
